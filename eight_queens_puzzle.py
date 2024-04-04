@@ -6,12 +6,12 @@ import time
 pygame.font.init()
 
 # Define colors
-BLACK = (20, 20, 20)
+BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-GRAY = (120, 120, 120)
+GRAY = (128, 128, 128)
 BLUE = (65, 105, 225)  # Updated color
 ORANGE = (255, 165, 0)  # Updated color
-RED = (165, 42, 42)
+RED = (255, 0, 0)
 
 # Define font
 FONT = pygame.font.Font(None, 36)
@@ -27,7 +27,7 @@ solved_solutions = []  # List to store solved solutions and player names
 
 def input_text(prompt, board):  # Added board as an argument
     text = ""
-    input_rect = pygame.Rect(10, 40, 200, 30)  # Adjust the size and position as needed
+    input_rect = pygame.Rect(240, 200, 320, 50)  # Adjust the size and position as needed
     active = False
 
     while True:
@@ -50,19 +50,19 @@ def input_text(prompt, board):  # Added board as an argument
                     else:
                         text += event.unicode
 
-        SCREEN.fill(BLACK)
+        SCREEN.fill(WHITE)
         draw_board()
         draw_queens(board)  # board is now passed as an argument
 
         # Render the prompt
-        prompt_text = FONT.render(prompt, True, WHITE)
-        SCREEN.blit(prompt_text, (10, 10))
+        prompt_text = FONT.render(prompt, True, BLACK)
+        SCREEN.blit(prompt_text, (240, 150))
 
         # Render the text input box
-        color = WHITE if active else GRAY
+        color = BLACK if active else GRAY
         pygame.draw.rect(SCREEN, color, input_rect, 2)
-        text_surface = FONT.render(text, True, WHITE)
-        SCREEN.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
+        text_surface = FONT.render(text, True, BLACK)  # Text color is black
+        SCREEN.blit(text_surface, (input_rect.x + 10, input_rect.y + 10))
 
         pygame.display.update()
 
@@ -186,7 +186,7 @@ def run_eight_queens(window):
     clock = pygame.time.Clock()
     while True:
         clock.tick(60)  # Limit the frame rate to 60 FPS
-        SCREEN.fill(BLACK)
+        SCREEN.fill(WHITE)
         draw_board()
         draw_queens(board)
         handle_input(board)

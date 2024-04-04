@@ -8,8 +8,9 @@ WIDTH, HEIGHT = 800, 600
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
-RED = (255, 0, 0)
-FONT_NAME = "Segoe UI"
+BLUE = (70, 130, 180)  # Steel Blue
+RED = (220, 20, 60)  # Crimson Red
+FONT_NAME = "Arial"
 FONT_SIZE = 18
 CITY_RADIUS = 20
 NUM_CITIES = 6
@@ -83,9 +84,9 @@ class Game:
 
     # Draw cities and distances on the screen
     def draw(self):
-        self.screen.fill((240, 240, 240))  # Light gray background
+        self.screen.fill(WHITE)  # Light gray background
         for city in self.cities:
-            color = RED if city.selected else GRAY  # Highlight the selected city
+            color = RED if city.selected else BLUE  # Highlight the selected city
             pygame.draw.circle(self.screen, color, (city.x, city.y), CITY_RADIUS)
             pygame.draw.circle(self.screen, BLACK, (city.x, city.y), CITY_RADIUS, 2)
             text = self.font.render(city.name, True, BLACK)
@@ -169,9 +170,9 @@ class Game:
                                     else:
                                         print(f"Wrong! Correct distance: {correct_distance}")
                                     self.selected_cities = []
-                            else:
-                                if city.name in self.selected_cities:
-                                    self.selected_cities.remove(city.name)
+                                    # Unhighlight selected cities
+                                    for city in self.cities:
+                                        city.selected = False
 
         pygame.quit()
 
