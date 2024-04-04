@@ -1,6 +1,6 @@
 import pygame
 import random
-import sqlite3
+from pymongo import MongoClient
 import time
 from math import sqrt
 
@@ -12,6 +12,12 @@ WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Predict the Value Index")
+
+# MongoDB Atlas Connection
+CONNECTION_STRING = "mongodb://localhost:27017"
+client = MongoClient(CONNECTION_STRING)
+db = client.pdsa
+collection = db.user_data
 
 # Define colors
 BACKGROUND_COLOR = (240, 240, 240)
@@ -25,18 +31,12 @@ FONT_LARGE = pygame.font.Font(None, 36)
 FONT_MEDIUM = pygame.font.Font(None, 24)
 FONT_SMALL = pygame.font.Font(None, 18)
 
-# Connect to the database
-conn = sqlite3.connect("game_data.db")
-c = conn.cursor()
-
-# Create a table to store user data
-c.execute("""CREATE TABLE IF NOT EXISTS user_data
-             (name TEXT, correct_answer INTEGER)""")
 
 # Function to generate random numbers
 def generate_random_numbers():
     numbers = [random.randint(1, 1000000) for _ in range(5000)]
     return numbers
+
 
 # Function to perform binary search
 def binary_search(arr, x):
@@ -59,6 +59,7 @@ def binary_search(arr, x):
 
     end = time.time()
     return mid, end - start
+
 
 # Function to perform jump search
 def jump_search(arr, x):
@@ -83,6 +84,7 @@ def jump_search(arr, x):
 
     return -1, time.time() - start
 
+
 # Function to perform exponential search
 def exponential_search(arr, x):
     start = time.time()
@@ -95,6 +97,7 @@ def exponential_search(arr, x):
         i *= 2
 
     return binary_search(arr, x)
+
 
 # Function to perform Fibonacci search
 def fibonacci_search(arr, x):
@@ -133,6 +136,7 @@ def fibonacci_search(arr, x):
 
     return -1, time.time() - start
 
+
 # Function to display the game menu
 def display_menu():
     display.fill(BACKGROUND_COLOR)
@@ -155,6 +159,7 @@ def display_menu():
                 mouse_pos = pygame.mouse.get_pos()
                 if play_button.collidepoint(mouse_pos):
                     play_game()
+
 
 # Function to display the game
 def play_game():
@@ -246,21 +251,20 @@ def play_game():
                                     display.blit(text, (WINDOW_WIDTH // 2 - text.get_width() // 2, WINDOW_HEIGHT - 150))
                                     pygame.display.update()
 
-                            c.execute("INSERT INTO user_data VALUES (?, 1)", (user_name,))
-                            conn.commit()
+                            collection.insert_one({"name": user_name, "correct_answer": 1})
                         else:
                             # User predicted incorrectly
                             result_text = FONT_LARGE.render("Incorrect!", True, (200, 0, 0))
                             display.blit(result_text, (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
-                            c.execute("INSERT INTO user_data VALUES (?, 0)", ("Anonymous",))
-                            conn.commit()
+                            collection.insert_one({"name": "Anonymous", "correct_answer": 0})
 
                         pygame.display.update()
                         pygame.time.delay(2000)
                         display_menu()
 
+
 # Start the game
 display_menu()
 
 # Close the database connection
-conn.close()
+client.close()
