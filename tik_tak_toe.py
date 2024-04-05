@@ -1,6 +1,5 @@
 import pygame
 import sys
-import random
 import math
 from datetime import datetime
 from pymongo import MongoClient

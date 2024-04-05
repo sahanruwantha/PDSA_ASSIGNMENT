@@ -24,7 +24,6 @@ WHITE = (255, 255, 255)
 GRAY = (128, 128, 128)
 GREEN = (0, 255, 0)
 
-
 # Define fonts
 font = pygame.font.Font(None, 36)
 input_font = pygame.font.Font(None, 24)
@@ -239,13 +238,18 @@ def sort_numbers(numbers):
 
 # Display the sorted numbers
 def display_numbers(sorted_numbers):
+    y_offset = 0
+    small_font = pygame.font.Font(None, 50)  # Define a smaller font size
     for i in range(20):
-        text = font.render(str(sorted_numbers[i]), True, WHITE)
+        print(i, str(sorted_numbers[i]))
+        screen.fill(BLACK)
+        text = small_font.render(str(sorted_numbers[i]), True, WHITE)  # Use the smaller font
         text_rect = text.get_rect()
-        text_rect.midtop = (WINDOW_WIDTH // 2, WINDOW_HEIGHT // 4 + i * 30)
+        text_rect.midtop = (WINDOW_WIDTH // 2, WINDOW_HEIGHT // 4 + y_offset)
         screen.blit(text, text_rect)
         pygame.display.flip()
         time.sleep(2)
+
 
 # Get the index of a value
 def get_index(value, sorted_numbers):
@@ -321,7 +325,8 @@ def game_loop():
                 index = int(user_input)
                 if index == get_index(value, sorted_numbers):
                     print("Correct!")
-                    # TODO: Save the user's name and correct response in the database
+                    # Save the user's name and correct response in the database
+                    collection.insert_one({"player_name": player_name, "correct_response": value})
                 else:
                     print("Incorrect.")
             except ValueError:
