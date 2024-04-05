@@ -2,6 +2,13 @@ import pygame
 import sys
 import random
 import heapq
+from pymongo import MongoClient
+
+# MongoDB Atlas Connection
+CONNECTION_STRING = "mongodb://localhost:27017"
+client = MongoClient(CONNECTION_STRING)
+db = client.pdsa
+collection = db.identify_shortest_path
 
 # Constants
 WIDTH, HEIGHT = 800, 600

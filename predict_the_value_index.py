@@ -17,7 +17,7 @@ pygame.display.set_caption("Predict the Value Index")
 CONNECTION_STRING = "mongodb://localhost:27017"
 client = MongoClient(CONNECTION_STRING)
 db = client.pdsa
-collection = db.user_data
+collection = db.predict_the_value_index
 
 # Define colors
 BACKGROUND_COLOR = (240, 240, 240)

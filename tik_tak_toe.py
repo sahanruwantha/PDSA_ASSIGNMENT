@@ -14,15 +14,15 @@ WINDOW = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption("Tic Tac Toe")
 
 # Define colors
-BACKGROUND_COLOR = (36, 36, 36)
-GRID_COLOR = (200, 200, 200)
-X_COLOR = (255, 153, 51)  # Orange
-O_COLOR = (51, 204, 51)   # Green
-WINNER_COLOR = (255, 102, 102)
-TEXT_COLOR = (255, 255, 255)
-INPUT_COLOR = (240, 240, 240)
+BACKGROUND_COLOR = (255, 255, 255)
+GRID_COLOR = (0, 0, 0)
+X_COLOR = (247, 185, 0)  # Yellow
+O_COLOR = (0, 187, 211)  # Cyan
+WINNER_COLOR = (255, 0, 0)  # Red
+TEXT_COLOR = (0, 0, 0)
+INPUT_COLOR = (255, 255, 255)  # White
 INPUT_BORDER_COLOR = (100, 100, 100)
-SHADOW_COLOR = (100, 100, 100)
+SHADOW_COLOR = (200, 200, 200)
 
 # Define the game board
 board = [' ' for _ in range(9)]
@@ -36,14 +36,14 @@ GAME_OVER = False
 WINNER = None
 
 # Define the font
-FONT = pygame.font.Font(None, 72)
-SMALL_FONT = pygame.font.Font(None, 36)
+FONT = pygame.font.SysFont("Arial", 72)  # Standard system font
+SMALL_FONT = pygame.font.SysFont("Arial", 36)  # Standard system font
 
 # MongoDB Atlas Connection
 CONNECTION_STRING = "mongodb://localhost:27017"
 client = MongoClient(CONNECTION_STRING)
 db = client.pdsa
-collection = db.tictactoe
+collection = db.tik_tak_toe
 
 # Function to draw the game board
 def draw_board():
@@ -150,6 +150,16 @@ def computer_move():
                 board[pos] = COMPUTER
                 return
 
+BACKGROUND_COLOR = (255, 255, 255)
+TEXT_COLOR = (50, 50, 50)
+INPUT_COLOR = (245, 245, 245)
+INPUT_BORDER_COLOR = (200, 200, 200)
+INPUT_ACTIVE_COLOR = (235, 235, 235)
+INPUT_ACTIVE_BORDER_COLOR = (150, 150, 150)
+
+# Define the font
+FONT = pygame.font.Font(None, 36)  # Use the default system font
+
 def run_tic_tac_toe():
     global GAME_OVER, WINNER, board
     username = ''
@@ -172,19 +182,19 @@ def run_tic_tac_toe():
         WINDOW.fill(BACKGROUND_COLOR)
 
         # Draw input box
-        pygame.draw.rect(WINDOW, INPUT_BORDER_COLOR, input_rect, 3, border_radius=15)
-        pygame.draw.rect(WINDOW, INPUT_COLOR, input_rect, border_radius=15)
-        input_surface = SMALL_FONT.render(username, True, TEXT_COLOR)
-        input_surface_rect = input_surface.get_rect(midleft=(input_rect.x + 15, input_rect.centery))  # Adjusted position
+        input_color = INPUT_ACTIVE_COLOR if input_active else INPUT_COLOR
+        input_border_color = INPUT_ACTIVE_BORDER_COLOR if input_active else INPUT_BORDER_COLOR
+        pygame.draw.rect(WINDOW, input_border_color, input_rect, 2, border_radius=25)
+        pygame.draw.rect(WINDOW, input_color, input_rect.inflate(-4, -4), border_radius=20)
+
+        input_surface = FONT.render(username, True, TEXT_COLOR)
+        input_surface_rect = input_surface.get_rect(midleft=(input_rect.x + 15, input_rect.centery))
         WINDOW.blit(input_surface, input_surface_rect)
 
-        # Add shadow effect to input box
-        shadow_rect = input_rect.move(5, 5)
-        pygame.draw.rect(WINDOW, SHADOW_COLOR, shadow_rect, border_radius=15)
-
-        text_surface = SMALL_FONT.render("Enter your username:", True, TEXT_COLOR)
+        text_surface = FONT.render("Enter your username:", True, TEXT_COLOR)
         WINDOW.blit(text_surface, (150, 250))
         pygame.display.update()
+
 
     while not GAME_OVER:
         for event in pygame.event.get():

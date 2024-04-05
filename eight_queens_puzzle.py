@@ -1,6 +1,7 @@
 import pygame
 import sys
 import time
+from pymongo import MongoClient
 
 # Initialize Pygame font module
 pygame.font.init()
@@ -15,6 +16,12 @@ RED = (255, 0, 0)
 
 # Define font
 FONT = pygame.font.Font(None, 36)
+
+# MongoDB Atlas Connection
+CONNECTION_STRING = "mongodb://localhost:27017"
+client = MongoClient(CONNECTION_STRING)
+db = client.pdsa
+collection = db.eight_queens_puzzle
 
 # Define board size
 BOARD_SIZE = 8

@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+from pymongo import MongoClient
 
 # Initialize Pygame
 pygame.init()
@@ -11,6 +12,11 @@ WINDOW_HEIGHT = 600
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Remember the Value Index")
 
+# MongoDB Atlas Connection
+CONNECTION_STRING = "mongodb://localhost:27017"
+client = MongoClient(CONNECTION_STRING)
+db = client.pdsa
+collection = db.remember_the_value_index
 
 # Define colors
 BLACK = (0, 0, 0)
