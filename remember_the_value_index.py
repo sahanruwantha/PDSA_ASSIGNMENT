@@ -1,394 +1,331 @@
 import pygame
 import random
-import numpy as np
 import time
-import copy
-from pymongo import MongoClient
 
-# Database connection
-CONNECTION_STRING = "mongodb://localhost:27017"
-client = MongoClient(CONNECTION_STRING)
-db = client.pdsa
-collection = db.sort
+# Initialize Pygame
+pygame.init()
 
-BACKGROUND_COLOR = (245, 245, 245)   # Light gray
-BAR_COLOR_START = (64, 114, 196)     # Blue
-BAR_COLOR_END = (255, 192, 0)        # Yellow
-MARK_COLOR_1 = (255, 0, 0)           # Red
-MARK_COLOR_2 = (0, 255, 0)           # Green
-TEXT_COLOR = (70, 70, 70)            # Dark gray
-BUTTON_COLOR = (76, 175, 80)         # Green
-BUTTON_HOVER_COLOR = (46, 139, 87)   # Dark green
+# Set up the display
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+pygame.display.set_caption("Remember the Value Index")
 
-MAX_IM_SIZE = 5000
 
-class Button:
-    def __init__(self, screen, text, x, y, width, height, font_size=24, on_click=None):
-        self.screen = screen
-        self.text = text
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.font_size = font_size
-        self.on_click = on_click
+# Define colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GRAY = (128, 128, 128)
+GREEN = (0, 255, 0)
 
-        self.font = pygame.font.Font(None, self.font_size)
-        self.text_surface = self.font.render(self.text, True, (255, 255, 255))
-        self.text_rect = self.text_surface.get_rect(center=(self.x + self.width // 2, self.y + self.height // 2))
 
-    def draw(self):
-        mouse_pos = pygame.mouse.get_pos()
-        if self.x < mouse_pos[0] < self.x + self.width and self.y < mouse_pos[1] < self.y + self.height:
-            pygame.draw.rect(self.screen, BUTTON_HOVER_COLOR, (self.x, self.y, self.width, self.height), border_radius=10)
-        else:
-            pygame.draw.rect(self.screen, BUTTON_COLOR, (self.x, self.y, self.width, self.height), border_radius=10)
+# Define fonts
+font = pygame.font.Font(None, 36)
+input_font = pygame.font.Font(None, 24)
 
-        self.screen.blit(self.text_surface, self.text_rect)
+def generate_random_numbers_with_animation():
+    loading_text = font.render("Generating Random Numbers...", True, WHITE)
+    loading_rect = loading_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
+    loading_bar_width = 400
+    loading_bar_height = 30
+    loading_bar_rect = pygame.Rect((WINDOW_WIDTH - loading_bar_width) // 2, loading_rect.bottom + 20,
+                                   loading_bar_width, loading_bar_height)
+    progress = 0
 
-    def isOver(self, pos):
-        if self.x < pos[0] < self.x + self.width:
-            if self.y < pos[1] < self.y + self.height:
-                return True
-        return False
-
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.isOver(event.pos):
-                if self.on_click:
-                    self.on_click()
-
-class DataSeq:
-    MAX_IM_SIZE = 5000
-
-    def __init__(self, Length, time_interval=1, sort_title="Sorting Visualizer", is_resampling=False, is_sparse=False, fps=25):
-        self.data = [x for x in range(Length)]
-        if is_resampling:
-            self.data = random.choices(self.data, k=Length)
-        else:
-            self.Shuffle()
-        if is_sparse:
-            self.data = [x if random.random() < 0.3 else 0 for x in self.data]
-
-        self.length = Length
-
-        self.SetTimeInterval(time_interval)
-        self.SetSortType(sort_title)
-        self.Getfigure()
-        self.InitTime()
-        self.Visualize()
-
-    def InitTime(self):
-        self.start = time.time()
-        self.time = 0
-        self.StopTimer()
-
-    def StartTimer(self):
-        self.start_flag = True
-        self.start = time.time()
-
-    def StopTimer(self):
-        self.start_flag = False
-
-    def GetTime(self):
-        if self.start_flag:
-            self.time = time.time() - self.start
-
-    def SetTimeInterval(self, time_interval):
-        self.time_interval = time_interval
-
-    def SetSortType(self, sort_title):
-        self.sort_title = sort_title
-
-    def Shuffle(self):
-        random.shuffle(self.data)
-
-    def Getfigure(self):
-        _bar_lenght = 1
-        figure = np.full((self.length * _bar_lenght, self.length * _bar_lenght, 3), BACKGROUND_COLOR, dtype=np.uint8)
-        for i in range(self.length):
-            val = self.data[i]
-            figure[-1 - val * _bar_lenght:, i * _bar_lenght:i * _bar_lenght + _bar_lenght] = self.GetColor(val, self.length)
-        self._bar_lenght = _bar_lenght
-        self.figure = figure
-        size = _bar_lenght * self.length 
-        self.im_size = size if size < self.MAX_IM_SIZE else self.MAX_IM_SIZE
-
-    @staticmethod
-    def GetColor(val, TOTAL):
-        return (
-            int(BAR_COLOR_START[0] + (BAR_COLOR_END[0] - BAR_COLOR_START[0]) * val / (2 * TOTAL)),
-            int(BAR_COLOR_START[1] + (BAR_COLOR_END[1] - BAR_COLOR_START[1]) * val / (2 * TOTAL)),
-            int(BAR_COLOR_START[2] + (BAR_COLOR_END[2] - BAR_COLOR_START[2]) * val / (2 * TOTAL))
-        )
-
-    def _set_figure(self, idx, val):
-        min_col = idx * self._bar_lenght
-        max_col = min_col + self._bar_lenght
-        min_row = -1 - val * self._bar_lenght
-        self.figure[:, min_col:max_col] = BACKGROUND_COLOR
-        self.figure[min_row:, min_col:max_col] = self.GetColor(val, self.length)
-
-    def SetColor(self, img, marks, color):
-        for idx in marks:
-            min_col = idx * self._bar_lenght
-            max_col = min_col + self._bar_lenght
-            min_row = -1 - self.data[idx] * self._bar_lenght
-            img[min_row:, min_col:max_col] = color
-
-    def Mark(self, img, marks, color):
-        self.SetColor(img, marks, color)
-
-    def SetVal(self, idx, val):
-        self.data[idx] = val
-        self._set_figure(idx, val)
-
-        self.Visualize((idx,))
-
-    def Swap(self, idx1, idx2):
-        self.data[idx1], self.data[idx2] = self.data[idx2], self.data[idx1]
-        self._set_figure(idx1, self.data[idx1])
-        self._set_figure(idx2, self.data[idx2])
-
-        self.Visualize((idx1, idx2))
-
-    def Visualize(self, mark1=None, mark2=None):
-        img = self.figure.copy()
-        if mark2:
-            self.Mark(img, mark2, MARK_COLOR_2)
-        if mark1:
-            self.Mark(img, mark1, MARK_COLOR_1)
-
-        img = np.transpose(img, (1, 0, 2))
-        img = np.flip(img, 0)
-
-        img = pygame.transform.scale(pygame.surfarray.make_surface(img), (self.im_size, self.im_size))
-
-        self.GetTime()
-        pygame.font.init()
-        font = pygame.font.Font(None, 20)
-        text = font.render(self.sort_title + " Time:%02.2fs" % self.time, True, TEXT_COLOR)
-        img.blit(text, (20, 20))
-
-        pygame.display.set_caption(self.sort_title)
-        pygame.display.get_surface().blit(img, (0, 0))
-        pygame.display.update()
-
-        clock = pygame.time.Clock()
-        for _ in range(5):
-            time.sleep(self.time_interval / 1000 / 5)
-            pygame.display.update()
-            clock.tick(60)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
-                pygame.quit()
-                return
-
-    def Hold(self):
-        for idx in range(self.length):
-            self.SetVal(idx, self.data[idx])
-
-        self.SetTimeInterval(0)
-        self.Visualize()
-
-class SortAlgorithms:
-    @staticmethod
-    def GetPivot(ds, Left, Right):
-        Mid = (Left + Right) // 2
-        if ds.data[Left] > ds.data[Right]:
-            ds.Swap(Left, Right)
-        if ds.data[Left] > ds.data[Mid]:
-            ds.Swap(Left, Mid)
-        if ds.data[Mid] > ds.data[Right]:
-            ds.Swap(Mid, Right)
-        ds.Swap(Mid, Right - 1)
-        return ds.data[Right - 1]
-
-    @staticmethod
-    def Qsort(ds, Left, Right):
-        Cutoff = 10
-        if Cutoff <= Right - Left:
-            Pivot = SortAlgorithms.GetPivot(ds, Left, Right)
-            low = Left + 1
-            high = Right - 2
-            while True:
-                while ds.data[low] < Pivot:
-                    low += 1
-                while ds.data[high] > Pivot:
-                    high -= 1
-                if low < high:
-                    ds.Swap(low, high)
-                    low += 1
-                    high -= 1
-                else:
-                    break
-            ds.Swap(low, Right - 1)
-            SortAlgorithms.Qsort(ds, Left, low - 1)
-            SortAlgorithms.Qsort(ds, low + 1, Right)
-        else:
-            for p in range(Left, Right + 1):
-                tmp = ds.data[p]
-                i = p
-                while i >= 1 and ds.data[i - 1] > tmp:
-                    ds.SetVal(i, ds.data[i - 1])
-                    i -= 1
-                ds.SetVal(i, tmp)
-
-    @staticmethod
-    def QuickSort(ds):
-        assert isinstance(ds, DataSeq), "Type Error"
-
-        Length = ds.length
-        SortAlgorithms.Qsort(ds, 0, Length - 1)
-
-    @staticmethod
-    def InsertionSort(ds):
-        assert isinstance(ds, DataSeq), "Type Error"
-
-        Length = ds.length
-        for i in range(1, Length):
-            key = ds.data[i]
-            j = i - 1
-            while j >= 0 and ds.data[j] > key:
-                ds.SetVal(j + 1, ds.data[j])
-                j -= 1
-            ds.SetVal(j + 1, key)
-
-    @staticmethod
-    def SelectionSort(ds):
-        assert isinstance(ds, DataSeq), "Type Error"
-
-        Length = ds.length
-        for i in range(Length - 1):
-            min_idx = i
-            for j in range(i + 1, Length):
-                if ds.data[j] < ds.data[min_idx]:
-                    min_idx = j
-            ds.Swap(i, min_idx)
-
-    @staticmethod
-    def ShellSort(ds):
-        assert isinstance(ds, DataSeq), "Type Error"
-
-        Length = ds.length
-        gap = Length // 2
-        while gap > 0:
-            for i in range(gap, Length):
-                temp = ds.data[i]
-                j = i
-                while j >= gap and ds.data[j - gap] > temp:
-                    ds.SetVal(j, ds.data[j - gap])
-                    j -= gap
-                ds.SetVal(j, temp)
-            gap //= 2
-
-    @staticmethod
-    def Merge(ds, L, R, RightEnd):
-        tmpData = copy.copy(ds.data)
-        LeftEnd = R - 1
-        i = L
-        j = R
-        k = L
-        while i <= LeftEnd and j <= RightEnd:
-            if tmpData[i] < tmpData[j]:
-                ds.SetVal(k, tmpData[i])
-                i += 1
-            else:
-                ds.SetVal(k, tmpData[j])
-                j += 1
-            k += 1
-        while i <= LeftEnd:
-            ds.SetVal(k, tmpData[i])
-            k += 1
-            i += 1
-        while j <= RightEnd:
-            ds.SetVal(k, tmpData[j])
-            k += 1
-            j += 1
-
-    @staticmethod
-    def Sort(ds, L, RightEnd):
-        if RightEnd > L:
-            mid = (L + RightEnd) // 2
-            SortAlgorithms.Sort(ds, L, mid)
-            SortAlgorithms.Sort(ds, mid + 1, RightEnd)
-            SortAlgorithms.Merge(ds, L, mid + 1, RightEnd)
-
-    @staticmethod
-    def MergeSort(ds):
-        assert isinstance(ds, DataSeq), "Type Error"
-
-        Length = ds.length
-        SortAlgorithms.Sort(ds, 0, Length - 1)
-
-    @staticmethod
-    def BubbleSort(ds):
-        assert isinstance(ds, DataSeq), "Type Error"
-
-        Length = ds.length
-        for i in range(Length - 1, -1, -1):
-            for j in range(0, i, 1):
-                if ds.data[j] > ds.data[j + 1]:
-                    ds.Swap(j, j + 1)
-
-def main():
-    pygame.init()
-    WIDTH, HEIGHT = 800, 600
-    WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Sorting Visualizer")
-
-    ds = DataSeq(500, is_sparse=True)
-
-    button_width = WIDTH // 6 - 20
-    button_height = 50
-    button_x_positions = [10 + (button_width + 10) * i for i in range(6)]
-    button_y = HEIGHT - button_height - 20
-
-    def quick_sort_callback():
-        SortAlgorithms.QuickSort(ds)
-
-    def merge_sort_callback():
-        SortAlgorithms.MergeSort(ds)
-
-    def bubble_sort_callback():
-        SortAlgorithms.BubbleSort(ds)
-
-    def insertion_sort_callback():
-        SortAlgorithms.InsertionSort(ds)
-
-    def selection_sort_callback():
-        SortAlgorithms.SelectionSort(ds)
-
-    def shell_sort_callback():
-        SortAlgorithms.ShellSort(ds)
-
-    quick_sort_button = Button(WIN, 'Quick Sort', button_x_positions[0], button_y, button_width, button_height, on_click=quick_sort_callback)
-    merge_sort_button = Button(WIN, 'Merge Sort', button_x_positions[1], button_y, button_width, button_height, on_click=merge_sort_callback)
-    bubble_sort_button = Button(WIN, 'Bubble Sort', button_x_positions[2], button_y, button_width, button_height, on_click=bubble_sort_callback)
-    insertion_sort_button = Button(WIN, 'Insertion Sort', button_x_positions[3], button_y, button_width, button_height, on_click=insertion_sort_callback)
-    selection_sort_button = Button(WIN, 'Selection Sort', button_x_positions[4], button_y, button_width, button_height, on_click=selection_sort_callback)
-    shell_sort_button = Button(WIN, 'Shell Sort', button_x_positions[5], button_y, button_width, button_height, on_click=shell_sort_callback)
-
-    buttons = [quick_sort_button, merge_sort_button, bubble_sort_button, insertion_sort_button, selection_sort_button, shell_sort_button]
-
-    run = True
-    while run:
+    while progress < 100:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                pygame.quit()
+                quit()
 
-            for button in buttons:
-                button.handle_event(event)
+        screen.fill(BLACK)
+        screen.blit(loading_text, loading_rect)
 
-        WIN.fill(BACKGROUND_COLOR)
+        # Draw the outline of the loading bar
+        pygame.draw.rect(screen, WHITE, loading_bar_rect, 2)
 
-        for button in buttons:
-            button.draw()
+        # Calculate the width of the loading bar based on progress
+        loading_progress_rect = pygame.Rect(loading_bar_rect.left, loading_bar_rect.top,
+                                            loading_bar_width * progress // 100, loading_bar_height)
+        pygame.draw.rect(screen, GREEN, loading_progress_rect)
 
-        pygame.display.update()
+        pygame.display.flip()
+        time.sleep(0.03)  # Adjust the speed of the animation
+        progress += 1
 
+    numbers = [random.randint(1, 1000000) for _ in range(5000)]
+    return numbers
+
+
+# Sorting algorithms
+def bubble_sort(numbers):
+    n = len(numbers)
+    for i in range(n):
+        for j in range(n - i - 1):
+            if numbers[j] > numbers[j + 1]:
+                numbers[j], numbers[j + 1] = numbers[j + 1], numbers[j]
+    return numbers
+
+def insertion_sort(numbers):
+    for i in range(1, len(numbers)):
+        key = numbers[i]
+        j = i - 1
+        while j >= 0 and key < numbers[j]:
+            numbers[j + 1] = numbers[j]
+            j -= 1
+        numbers[j + 1] = key
+    return numbers
+
+def merge_sort(numbers):
+    if len(numbers) <= 1:
+        return numbers
+
+    mid = len(numbers) // 2
+    left = numbers[:mid]
+    right = numbers[mid:]
+
+    left = merge_sort(left)
+    right = merge_sort(right)
+
+    return merge(left, right)
+
+def merge(left, right):
+    result = []
+    i = j = 0
+
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+
+    result += left[i:]
+    result += right[j:]
+
+    return result
+
+def radix_sort(numbers):
+    max_num = max(numbers)
+    exp = 1
+
+    while max_num / exp > 0:
+        counting_sort(numbers, exp)
+        exp *= 10
+
+    return numbers
+
+def counting_sort(numbers, exp):
+    n = len(numbers)
+    output = [0] * n
+    count = [0] * 10
+
+    for num in numbers:
+        digit = (num // exp) % 10
+        count[digit] += 1
+
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+
+    i = n - 1
+    while i >= 0:
+        digit = (numbers[i] // exp) % 10
+        output[count[digit] - 1] = numbers[i]
+        count[digit] -= 1
+        i -= 1
+
+    for i in range(n):
+        numbers[i] = output[i]
+
+def shell_sort(numbers):
+    n = len(numbers)
+    gap = n // 2
+
+    while gap > 0:
+        for i in range(gap, n):
+            temp = numbers[i]
+            j = i
+            while j >= gap and numbers[j - gap] > temp:
+                numbers[j] = numbers[j - gap]
+                j -= gap
+            numbers[j] = temp
+        gap //= 2
+
+    return numbers
+
+def quick_sort(numbers):
+    if len(numbers) <= 1:
+        return numbers
+
+    pivot = numbers[len(numbers) // 2]
+    left = [x for x in numbers if x < pivot]
+    middle = [x for x in numbers if x == pivot]
+    right = [x for x in numbers if x > pivot]
+
+    return quick_sort(left) + middle + quick_sort(right)
+
+def tim_sort(numbers):
+    min_run = 32
+    n = len(numbers)
+
+    for start in range(0, n, min_run):
+        end = min(start + min_run - 1, n - 1)
+        numbers[start:end + 1] = insertion_sort(numbers[start:end + 1])
+
+    size = min_run
+    while size < n:
+        for start in range(0, n, size * 2):
+            midpoint = start + size - 1
+            end = min((start + size * 2 - 1), (n - 1))
+
+            merged_array = merge(
+                left=numbers[start:midpoint + 1],
+                right=numbers[midpoint + 1:end + 1]
+            )
+
+            numbers[start:start + len(merged_array)] = merged_array
+
+        size *= 2
+
+    return numbers
+
+# Sort the numbers and record the time taken
+def sort_numbers(numbers):
+    sorting_times = []
+
+    start_time = time.time()
+    bubble_sort(numbers.copy())
+    end_time = time.time()
+    sorting_times.append(("Bubble Sort", end_time - start_time))
+
+    start_time = time.time()
+    insertion_sort(numbers.copy())
+    end_time = time.time()
+    sorting_times.append(("Insertion Sort", end_time - start_time))
+
+    start_time = time.time()
+    merge_sort(numbers.copy())
+    end_time = time.time()
+    sorting_times.append(("Merge Sort", end_time - start_time))
+
+    start_time = time.time()
+    radix_sort(numbers.copy())
+    end_time = time.time()
+    sorting_times.append(("Radix Sort", end_time - start_time))
+
+    start_time = time.time()
+    shell_sort(numbers.copy())
+    end_time = time.time()
+    sorting_times.append(("Shell Sort", end_time - start_time))
+
+    start_time = time.time()
+    quick_sort(numbers.copy())
+    end_time = time.time()
+    sorting_times.append(("Quick Sort", end_time - start_time))
+
+    start_time = time.time()
+    tim_sort(numbers.copy())
+    end_time = time.time()
+    sorting_times.append(("Tim Sort", end_time - start_time))
+
+    return numbers, sorting_times
+
+# Display the sorted numbers
+def display_numbers(sorted_numbers):
+    for i in range(20):
+        text = font.render(str(sorted_numbers[i]), True, WHITE)
+        text_rect = text.get_rect()
+        text_rect.midtop = (WINDOW_WIDTH // 2, WINDOW_HEIGHT // 4 + i * 30)
+        screen.blit(text, text_rect)
+        pygame.display.flip()
+        time.sleep(2)
+
+# Get the index of a value
+def get_index(value, sorted_numbers):
+    return sorted_numbers.index(value)
+
+# Get user input using Pygame UI
+def get_user_input(prompt):
+    input_text = ""
+    input_rect = pygame.Rect(WINDOW_WIDTH // 4, WINDOW_HEIGHT // 2, WINDOW_WIDTH // 2, 40)
+    active = False
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if input_rect.collidepoint(event.pos):
+                    active = True
+                else:
+                    active = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    return input_text
+                elif event.key == pygame.K_BACKSPACE:
+                    input_text = input_text[:-1]
+                else:
+                    input_text += event.unicode
+
+        # Clear the screen
+        screen.fill(BLACK)
+
+        # Render the prompt
+        prompt_text = font.render(prompt, True, WHITE)
+        prompt_rect = prompt_text.get_rect()
+        prompt_rect.midtop = (WINDOW_WIDTH // 2, WINDOW_HEIGHT // 4)
+        screen.blit(prompt_text, prompt_rect)
+
+        # Render the input text
+        input_surface = input_font.render(input_text, True, WHITE)
+        input_rect.w = max(200, input_surface.get_width() + 10)
+        pygame.draw.rect(screen, GRAY, input_rect, 2)
+        screen.blit(input_surface, (input_rect.x + 5, input_rect.y + 5))
+
+        if active:
+            pygame.draw.line(screen, WHITE, (input_rect.right - 10, input_rect.y + 20), (input_rect.right - 2, input_rect.y + 20), 2)
+
+        pygame.display.flip()
+
+def game_loop():
+    running = True
+    numbers = generate_random_numbers_with_animation()
+    sorted_numbers, sorting_times = sort_numbers(numbers)
+    player_name = get_user_input("Enter your name: ")
+
+    while running:
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        # Clear the screen
+        screen.fill(BLACK)
+
+        # Display the sorted numbers
+        display_numbers(sorted_numbers)
+
+        # Ask the user for the index of two random values
+        random_values = random.sample(sorted_numbers[:20], 2)
+        for value in random_values:
+            user_input = get_user_input(f"Enter the index of {value}: ")
+            try:
+                index = int(user_input)
+                if index == get_index(value, sorted_numbers):
+                    print("Correct!")
+                    # TODO: Save the user's name and correct response in the database
+                else:
+                    print("Incorrect.")
+            except ValueError:
+                print("Invalid input. Please enter an integer.")
+
+        # Update the display
+        pygame.display.flip()
+
+    # Quit Pygame
     pygame.quit()
 
-if __name__ == "__main__":
-    main()
+# Run the game loop
+game_loop()
