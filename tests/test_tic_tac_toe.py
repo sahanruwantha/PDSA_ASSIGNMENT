@@ -85,5 +85,3 @@ def test_minimax_tie():
     assert score == 0
 
 
-if __name__ == "__main__":
-    pytest.main()

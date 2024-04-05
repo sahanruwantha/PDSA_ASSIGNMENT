@@ -22,6 +22,3 @@ def test_bellman_ford(game):
     if result != "negative cycle":
         assert isinstance(result, int)
     assert isinstance(duration, float)
-
-if __name__ == "__main__":
-    pytest.main()
