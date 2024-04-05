@@ -10,7 +10,7 @@ pygame.init()
 # Set up the display
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
-display = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Predict the Value Index")
 
 # MongoDB Atlas Connection
@@ -26,14 +26,47 @@ BUTTON_HOVER_COLOR = (96, 160, 255)
 BUTTON_TEXT_COLOR = (255, 255, 255)
 TEXT_COLOR = (64, 64, 64)
 
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GRAY = (128, 128, 128)
+GREEN = (0, 255, 0)
+
 # Define fonts
 FONT_LARGE = pygame.font.Font(None, 36)
 FONT_MEDIUM = pygame.font.Font(None, 24)
 FONT_SMALL = pygame.font.Font(None, 18)
 
-
 # Function to generate random numbers
 def generate_random_numbers():
+    loading_text = FONT_LARGE.render("Generating Random Numbers...", True, WHITE)
+    loading_rect = loading_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
+    loading_bar_width = 400
+    loading_bar_height = 30
+    loading_bar_rect = pygame.Rect((WINDOW_WIDTH - loading_bar_width) // 2, loading_rect.bottom + 20,
+                                   loading_bar_width, loading_bar_height)
+    progress = 0
+
+    while progress < 100:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        screen.fill(BLACK)
+        screen.blit(loading_text, loading_rect)
+
+        # Draw the outline of the loading bar
+        pygame.draw.rect(screen, WHITE, loading_bar_rect, 2)
+
+        # Calculate the width of the loading bar based on progress
+        loading_progress_rect = pygame.Rect(loading_bar_rect.left, loading_bar_rect.top,
+                                            loading_bar_width * progress // 100, loading_bar_height)
+        pygame.draw.rect(screen, GREEN, loading_progress_rect)
+
+        pygame.display.flip()
+        time.sleep(0.03)  # Adjust the speed of the animation
+        progress += 1
+
     numbers = [random.randint(1, 1000000) for _ in range(5000)]
     return numbers
 
@@ -139,14 +172,14 @@ def fibonacci_search(arr, x):
 
 # Function to display the game menu
 def display_menu():
-    display.fill(BACKGROUND_COLOR)
+    screen.fill(BACKGROUND_COLOR)
     title = FONT_LARGE.render("Predict the Value Index", True, TEXT_COLOR)
-    display.blit(title, (WINDOW_WIDTH // 2 - title.get_width() // 2, 50))
+    screen.blit(title, (WINDOW_WIDTH // 2 - title.get_width() // 2, 50))
 
     play_button = pygame.Rect(WINDOW_WIDTH // 2 - 100, WINDOW_HEIGHT // 2 - 25, 200, 50)
-    pygame.draw.rect(display, BUTTON_COLOR, play_button)
+    pygame.draw.rect(screen, BUTTON_COLOR, play_button)
     play_text = FONT_MEDIUM.render("Play", True, BUTTON_TEXT_COLOR)
-    display.blit(play_text, (WINDOW_WIDTH // 2 - play_text.get_width() // 2, WINDOW_HEIGHT // 2 - play_text.get_height() // 2))
+    screen.blit(play_text, (WINDOW_WIDTH // 2 - play_text.get_width() // 2, WINDOW_HEIGHT // 2 - play_text.get_height() // 2))
 
     pygame.display.update()
 
@@ -189,25 +222,25 @@ def play_game():
     random.shuffle(choices)
 
     # Display search results and prediction
-    display.fill(BACKGROUND_COLOR)
+    screen.fill(BACKGROUND_COLOR)
     title = FONT_LARGE.render("Search Results", True, TEXT_COLOR)
-    display.blit(title, (50, 50))
+    screen.blit(title, (50, 50))
 
     y = 100
     for data in search_data:
         result = FONT_MEDIUM.render(f"{data[0]}: Index = {data[1]}, Time Taken = {data[2]:.6f} seconds", True, TEXT_COLOR)
-        display.blit(result, (100, y))
+        screen.blit(result, (100, y))
         y += 30
 
     prediction_text = FONT_LARGE.render(f"Predict the index of value {prediction_value}:", True, TEXT_COLOR)
-    display.blit(prediction_text, (50, y + 50))
+    screen.blit(prediction_text, (50, y + 50))
 
     y += 100
     for i, choice in enumerate(choices):
         choice_text = FONT_MEDIUM.render(f"{i + 1}. {choice}", True, TEXT_COLOR)
         choice_rect = pygame.Rect(100, y, choice_text.get_width() + 20, choice_text.get_height() + 10)
-        pygame.draw.rect(display, BUTTON_COLOR, choice_rect)
-        display.blit(choice_text, (105, y + 5))
+        pygame.draw.rect(screen, BUTTON_COLOR, choice_rect)
+        screen.blit(choice_text, (105, y + 5))
         y += 50
 
     pygame.display.update()
@@ -225,11 +258,11 @@ def play_game():
                         if i == choices.index(prediction_index):
                             # User predicted correctly
                             result_text = FONT_LARGE.render("Correct!", True, (0, 200, 0))
-                            display.blit(result_text, (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
+                            screen.blit(result_text, (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
 
                             # Get user name and save data
                             name = FONT_MEDIUM.render("Enter your name:", True, TEXT_COLOR)
-                            display.blit(name, (WINDOW_WIDTH // 2 - name.get_width() // 2, WINDOW_HEIGHT - 200))
+                            screen.blit(name, (WINDOW_WIDTH // 2 - name.get_width() // 2, WINDOW_HEIGHT - 200))
                             pygame.display.update()
 
                             user_name = ""
@@ -247,15 +280,15 @@ def play_game():
                                         user_name += event.unicode
 
                                     text = FONT_SMALL.render(user_name, True, TEXT_COLOR)
-                                    display.fill(BACKGROUND_COLOR, (WINDOW_WIDTH // 2 - 100, WINDOW_HEIGHT - 150, 200, 50))
-                                    display.blit(text, (WINDOW_WIDTH // 2 - text.get_width() // 2, WINDOW_HEIGHT - 150))
+                                    screen.fill(BACKGROUND_COLOR, (WINDOW_WIDTH // 2 - 100, WINDOW_HEIGHT - 150, 200, 50))
+                                    screen.blit(text, (WINDOW_WIDTH // 2 - text.get_width() // 2, WINDOW_HEIGHT - 150))
                                     pygame.display.update()
 
                             collection.insert_one({"name": user_name, "correct_answer": 1})
                         else:
                             # User predicted incorrectly
                             result_text = FONT_LARGE.render("Incorrect!", True, (200, 0, 0))
-                            display.blit(result_text, (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
+                            screen.blit(result_text, (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
                             collection.insert_one({"name": "Anonymous", "correct_answer": 0})
 
                         pygame.display.update()
