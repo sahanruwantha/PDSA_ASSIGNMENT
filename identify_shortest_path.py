@@ -2,6 +2,7 @@ import pygame
 import sys
 import random
 import heapq
+import time
 from pymongo import MongoClient
 
 # MongoDB Atlas Connection
@@ -118,10 +119,13 @@ class Game:
         distances[start] = 0
         heap = [(0, start)]
 
+        start_time = time.time()  # Start time for algorithm execution
+
         while heap:
             current_distance, current_city = heapq.heappop(heap)
             if current_city == end:
-                return current_distance
+                duration = time.time() - start_time  # Calculate algorithm execution duration
+                return current_distance, duration
             if current_distance > distances[current_city]:
                 continue
             for neighbor, distance in self.distances[current_city].items():
@@ -130,8 +134,32 @@ class Game:
                     distances[neighbor] = total_distance
                     heapq.heappush(heap, (total_distance, neighbor))
 
+    # Bellman-Ford algorithm to find the shortest path
+    def bellman_ford(self, start, end):
+        distances = {city.name: float('inf') for city in self.cities}
+        distances[start] = 0
+
+        start_time = time.time()  # Start time for algorithm execution
+
+        for _ in range(len(self.cities) - 1):
+            for city1 in self.distances:
+                for city2 in self.distances[city1]:
+                    distance = self.distances[city1][city2]
+                    if distances[city1] + distance < distances[city2]:
+                        distances[city2] = distances[city1] + distance
+
+        for city1 in self.distances:
+            for city2 in self.distances[city1]:
+                distance = self.distances[city1][city2]
+                if distances[city1] + distance < distances[city2]:
+                    duration = time.time() - start_time  # Calculate algorithm execution duration
+                    return "negative cycle", duration
+
+        duration = time.time() - start_time  # Calculate algorithm execution duration
+        return distances[end], duration
+
     # Show popup window for input
-    def show_popup(self, correct_distance):
+    def show_popup(self, correct_distance_dijkstra, correct_distance_bf):
         input_box = InputBox(300, 200, 200, 40, font=self.font)
         input_box.text = ""
         input_box.active = True
@@ -145,7 +173,7 @@ class Game:
                 input_box.handle_event(event)
 
             self.screen.fill(WHITE)
-            prompt_text = self.font.render(f"Enter the correct shortest distance ({correct_distance}):", True, BLACK)
+            prompt_text = self.font.render(f"Enter the correct shortest distance (Dijkstra: {correct_distance_dijkstra}, Bellman-Ford: {correct_distance_bf}):", True, BLACK)
             prompt_rect = prompt_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
             self.screen.blit(prompt_text, prompt_rect)
             input_box.draw(self.screen)
@@ -170,12 +198,17 @@ class Game:
                                 self.selected_cities.append(city.name)
                                 if len(self.selected_cities) == 2:
                                     city1, city2 = self.selected_cities
-                                    correct_distance = self.dijkstra(city1, city2)
-                                    user_distance = self.show_popup(correct_distance)
-                                    if user_distance == str(correct_distance):
+                                    correct_distance_dijkstra, duration_dijkstra = self.dijkstra(city1, city2)
+                                    correct_distance_bf, duration_bf = self.bellman_ford(city1, city2)
+                                    user_distance = self.show_popup(correct_distance_dijkstra, correct_distance_bf)
+                                    if user_distance == str(correct_distance_dijkstra) or user_distance == str(correct_distance_bf):
                                         print("Correct!")
                                     else:
-                                        print(f"Wrong! Correct distance: {correct_distance}")
+                                        print(f"Wrong! Correct distances: Dijkstra - {correct_distance_dijkstra}, Bellman-Ford - {correct_distance_bf}")
+                                    print(f"Dijkstra's algorithm execution time: {duration_dijkstra} seconds")
+                                    print(f"Bellman-Ford algorithm execution time: {duration_bf} seconds")
+                                    # Record algorithm execution durations in the database
+                                    collection.insert_one({"player_name": self.player_name, "dijkstra_duration": duration_dijkstra, "bellman_ford_duration": duration_bf})
                                     self.selected_cities = []
                                     # Unhighlight selected cities
                                     for city in self.cities:
