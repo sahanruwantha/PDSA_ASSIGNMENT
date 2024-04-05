@@ -184,7 +184,6 @@ def handle_input(board):
                 board[row][col] = 0
                 solutions = []
 
-
 def initialize_module(main_window):
     global SCREEN, WINDOW_WIDTH, WINDOW_HEIGHT, player_name
     SCREEN = main_window
