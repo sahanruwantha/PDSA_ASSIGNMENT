@@ -193,7 +193,6 @@ def display_menu():
                 if play_button.collidepoint(mouse_pos):
                     play_game()
 
-
 # Function to display the game
 def play_game():
     # Generate random numbers
