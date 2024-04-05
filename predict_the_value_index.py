@@ -193,6 +193,7 @@ def display_menu():
                 if play_button.collidepoint(mouse_pos):
                     play_game()
 
+
 # Function to display the game
 def play_game():
     # Generate random numbers
@@ -210,14 +211,13 @@ def play_game():
 
     # Select a random value for prediction
     prediction_value = random.randint(1, 1000000)
-    prediction_index = binary_search(numbers, prediction_value)[0]
+    prediction_time = binary_search(numbers, prediction_value)[1]
 
     # Generate prediction choices
-    choices = [prediction_index]
+    choices = [prediction_time]
     while len(choices) < 4:
-        choice = random.randint(0, len(numbers) - 1)
-        if choice not in choices:
-            choices.append(choice)
+        choice = random.uniform(0, max(search_data, key=lambda x: x[1])[1])
+        choices.append(choice)
     random.shuffle(choices)
 
     # Display search results and prediction
@@ -226,17 +226,19 @@ def play_game():
     screen.blit(title, (50, 50))
 
     y = 100
+    max_time = max([sd[2] for sd in search_data])
     for data in search_data:
-        result = FONT_MEDIUM.render(f"{data[0]}: Index = {data[1]}, Time Taken = {data[2]:.6f} seconds", True, TEXT_COLOR)
+        result = FONT_MEDIUM.render(f"{data[0]}: Time Taken = {data[2]:.6f}s", True, TEXT_COLOR)
         screen.blit(result, (100, y))
-        y += 30
+        draw_bar_chart(50, y + 20, 300, 20, data[2], max_time, prediction_time)
+        y += 50
 
-    prediction_text = FONT_LARGE.render(f"Predict the index of value {prediction_value}:", True, TEXT_COLOR)
+    prediction_text = FONT_LARGE.render(f"Predict the index of {prediction_value}:", True, TEXT_COLOR)
     screen.blit(prediction_text, (50, y + 50))
 
     y += 100
     for i, choice in enumerate(choices):
-        choice_text = FONT_MEDIUM.render(f"{i + 1}. {choice}", True, TEXT_COLOR)
+        choice_text = FONT_MEDIUM.render(f"{i + 1}. {search_data[i][1]}", True, TEXT_COLOR)
         choice_rect = pygame.Rect(100, y, choice_text.get_width() + 20, choice_text.get_height() + 10)
         pygame.draw.rect(screen, BUTTON_COLOR, choice_rect)
         screen.blit(choice_text, (105, y + 5))
@@ -254,7 +256,7 @@ def play_game():
                 for i, choice in enumerate(choices):
                     choice_rect = pygame.Rect(100, 300 + i * 50, 200, 40)
                     if choice_rect.collidepoint(mouse_pos):
-                        if i == choices.index(prediction_index):
+                        if i == choices.index(prediction_time):
                             # User predicted correctly
                             result_text = FONT_LARGE.render("Correct!", True, (0, 200, 0))
                             screen.blit(result_text, (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
@@ -293,6 +295,23 @@ def play_game():
                         pygame.display.update()
                         pygame.time.delay(2000)
                         display_menu()
+
+
+# Function to draw bar chart
+def draw_bar_chart(x, y, width, height, value, max_value, target_value):
+    bar_height = height
+    bar_width = width * (value / max_value)
+    rect = pygame.Rect(x, y, bar_width, bar_height)
+    pygame.draw.rect(screen, BUTTON_COLOR, rect)
+    pygame.display.update()
+    pygame.time.delay(10)
+    if value == target_value:
+        return
+    if value < target_value:
+        value += 0.01  # Adjust this value for speed of animation
+        if value > target_value:
+            value = target_value
+        draw_bar_chart(x, y, width, height, value, max_value, target_value)
 
 
 # Start the game
