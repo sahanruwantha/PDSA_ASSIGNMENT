@@ -220,8 +220,6 @@ def run_tic_tac_toe():
                 message = "It's a tie!"
             else:
                 message = f"{WINNER} wins!"
-                # Save the winner
-                # Save the winner's username and correct response in the database
                 timestamp = datetime.now()
                 data = {
                     "username": username,
