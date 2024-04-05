@@ -1,7 +1,6 @@
 import pytest
 from identify_shortest_path import Game
 
-# Fixture to initialize the Game object
 @pytest.fixture
 def game():
     return Game()

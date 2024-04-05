@@ -35,8 +35,8 @@ GAME_OVER = False
 WINNER = None
 
 # Define the font
-FONT = pygame.font.SysFont("Arial", 72)  # Standard system font
-SMALL_FONT = pygame.font.SysFont("Arial", 36)  # Standard system font
+FONT = pygame.font.SysFont("Arial", 72)  
+SMALL_FONT = pygame.font.SysFont("Arial", 36)  
 
 # MongoDB Atlas Connection
 CONNECTION_STRING = "mongodb://localhost:27017"
@@ -137,7 +137,6 @@ def minimax(board, depth, is_maximizing):
         return best_score
 
 def computer_move():
-    # Implement an intelligent move by considering corners, center, and edges
     corners = [0, 2, 6, 8]
     edges = [1, 3, 5, 7]
     center = 4
@@ -157,13 +156,13 @@ INPUT_ACTIVE_COLOR = (235, 235, 235)
 INPUT_ACTIVE_BORDER_COLOR = (150, 150, 150)
 
 # Define the font
-FONT = pygame.font.Font(None, 36)  # Use the default system font
+FONT = pygame.font.Font(None, 36) 
 
 def run_tic_tac_toe():
     global GAME_OVER, WINNER, board
     username = ''
     input_active = True
-    input_rect = pygame.Rect(150, 300, 300, 50)  # Input box rect
+    input_rect = pygame.Rect(150, 300, 300, 50)  
 
     while input_active:
         for event in pygame.event.get():
@@ -234,7 +233,7 @@ def run_tic_tac_toe():
             text_rect = text.get_rect(center=(WINDOW_SIZE[0] // 2, WINDOW_SIZE[1] // 2))
             WINDOW.blit(text, text_rect)
 
-            # Fade effect for the winner message
+            # winner message
             alpha = 255
             while alpha > 0:
                 text.set_alpha(alpha)

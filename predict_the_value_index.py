@@ -2,7 +2,7 @@ import pygame
 import random
 from pymongo import MongoClient
 import time
-from math import sqrt
+import math 
 
 # Initialize Pygame
 pygame.init()
@@ -20,16 +20,14 @@ db = client.pdsa
 collection = db.predict_the_value_index
 
 # Define colors
-BACKGROUND_COLOR = (240, 240, 240)
+BACKGROUND_COLOR = (255, 255, 255)
 BUTTON_COLOR = (64, 128, 255)
 BUTTON_HOVER_COLOR = (96, 160, 255)
 BUTTON_TEXT_COLOR = (255, 255, 255)
 TEXT_COLOR = (64, 64, 64)
-
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GRAY = (128, 128, 128)
-GREEN = (0, 255, 0)
+BAR_COLOR = (64, 128, 255)
+CORRECT_COLOR = (0, 200, 0)
+INCORRECT_COLOR = (200, 0, 0)
 
 # Define fonts
 FONT_LARGE = pygame.font.Font(None, 36)
@@ -38,7 +36,7 @@ FONT_SMALL = pygame.font.Font(None, 18)
 
 # Function to generate random numbers
 def generate_random_numbers():
-    loading_text = FONT_LARGE.render("Generating Random Numbers...", True, WHITE)
+    loading_text = FONT_LARGE.render("Generating Random Numbers...", True, TEXT_COLOR)
     loading_rect = loading_text.get_rect(center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
     loading_bar_width = 400
     loading_bar_height = 30
@@ -52,122 +50,26 @@ def generate_random_numbers():
                 pygame.quit()
                 quit()
 
-        screen.fill(BLACK)
+        screen.fill(BACKGROUND_COLOR)
         screen.blit(loading_text, loading_rect)
 
         # Draw the outline of the loading bar
-        pygame.draw.rect(screen, WHITE, loading_bar_rect, 2)
+        pygame.draw.rect(screen, TEXT_COLOR, loading_bar_rect, 2)
 
         # Calculate the width of the loading bar based on progress
         loading_progress_rect = pygame.Rect(loading_bar_rect.left, loading_bar_rect.top,
                                             loading_bar_width * progress // 100, loading_bar_height)
-        pygame.draw.rect(screen, GREEN, loading_progress_rect)
+        pygame.draw.rect(screen, BUTTON_COLOR, loading_progress_rect)
 
         pygame.display.flip()
-        time.sleep(0.03)  # Adjust the speed of the animation
+        time.sleep(0.03)  # Animation speed
         progress += 1
 
-    numbers = [random.randint(1, 1000000) for _ in range(5000)]
-    return numbers
+    arr = []
+    for _ in range(5000):
+        arr.append(random.randint(1, 1000000))
+    return arr
 
-
-# Function to perform binary search
-def binary_search(arr, x):
-    start = time.time()
-    low = 0
-    high = len(arr) - 1
-    mid = 0
-
-    while low <= high:
-        mid = (low + high) // 2
-
-        if arr[mid] < x:
-            low = mid + 1
-
-        elif arr[mid] > x:
-            high = mid - 1
-
-        else:
-            break
-
-    end = time.time()
-    return mid, end - start
-
-
-# Function to perform jump search
-def jump_search(arr, x):
-    start = time.time()
-    n = len(arr)
-    step = int(sqrt(n))
-    prev = 0
-
-    while arr[min(step, n) - 1] < x:
-        prev = step
-        step += int(sqrt(n))
-        if prev >= n:
-            return -1, time.time() - start
-
-    while arr[prev] < x:
-        prev += 1
-        if prev == min(step, n):
-            return -1, time.time() - start
-
-    if arr[prev] == x:
-        return prev, time.time() - start
-
-    return -1, time.time() - start
-
-
-# Function to perform exponential search
-def exponential_search(arr, x):
-    start = time.time()
-    n = len(arr)
-    if arr[0] == x:
-        return 0, time.time() - start
-
-    i = 1
-    while i < n and arr[i] <= x:
-        i *= 2
-
-    return binary_search(arr, x)
-
-
-# Function to perform Fibonacci search
-def fibonacci_search(arr, x):
-    start = time.time()
-    n = len(arr)
-    fibM_minus_2 = 0
-    fibM_minus_1 = 1
-    fibM = fibM_minus_2 + fibM_minus_1
-
-    while fibM < n:
-        fibM_minus_2 = fibM_minus_1
-        fibM_minus_1 = fibM
-        fibM = fibM_minus_2 + fibM_minus_1
-
-    offset = -1
-
-    while fibM > 1:
-        i = min(offset + fibM_minus_2, n - 1)
-
-        if arr[i] < x:
-            fibM = fibM_minus_1
-            fibM_minus_1 = fibM_minus_2
-            fibM_minus_2 = fibM - fibM_minus_1
-            offset = i
-
-        elif arr[i] > x:
-            fibM = fibM_minus_2
-            fibM_minus_1 = fibM_minus_1 - fibM_minus_2
-            fibM_minus_2 = fibM - fibM_minus_1
-
-        else:
-            return i, time.time() - start
-
-    if fibM_minus_1 and arr[offset + 1] == x:
-        return offset + 1, time.time() - start
-
-    return -1, time.time() - start
 
 
 # Function to display the game menu
@@ -177,7 +79,7 @@ def display_menu():
     screen.blit(title, (WINDOW_WIDTH // 2 - title.get_width() // 2, 50))
 
     play_button = pygame.Rect(WINDOW_WIDTH // 2 - 100, WINDOW_HEIGHT // 2 - 25, 200, 50)
-    pygame.draw.rect(screen, BUTTON_COLOR, play_button)
+    pygame.draw.rect(screen, BUTTON_COLOR, play_button, border_radius=5) 
     play_text = FONT_MEDIUM.render("Play", True, BUTTON_TEXT_COLOR)
     screen.blit(play_text, (WINDOW_WIDTH // 2 - play_text.get_width() // 2, WINDOW_HEIGHT // 2 - play_text.get_height() // 2))
 
@@ -192,72 +94,90 @@ def display_menu():
                 mouse_pos = pygame.mouse.get_pos()
                 if play_button.collidepoint(mouse_pos):
                     play_game()
+            elif event.type == pygame.MOUSEMOTION:  
+                if play_button.collidepoint(event.pos):
+                    pygame.draw.rect(screen, BUTTON_HOVER_COLOR, play_button, border_radius=5)
+                else:
+                    pygame.draw.rect(screen, BUTTON_COLOR, play_button, border_radius=5)
+                screen.blit(play_text, (WINDOW_WIDTH // 2 - play_text.get_width() // 2, WINDOW_HEIGHT // 2 - play_text.get_height() // 2))
+                pygame.display.update()
 
 
-# Function to display the game
 def play_game():
-    # Generate random numbers
-    numbers = generate_random_numbers()
+    return_to_menu = False 
 
-    # Sort the list for searching
+    numbers = generate_random_numbers()
     numbers.sort()
 
-    # Perform searches and record data
     search_data = []
+    max_time = 0
+    random_value = random.choice(numbers)
+    index_final = 0
     for search_func in [binary_search, jump_search, exponential_search, fibonacci_search]:
-        random_value = random.randint(1, 1000000)
         index, time_taken = search_func(numbers, random_value)
-        search_data.append((search_func.__name__, index, time_taken))
+        search_data.append((search_func.__name__, time_taken, index))
+        max_time = max(max_time, time_taken)
+        index_final = index
 
-    # Select a random value for prediction
-    prediction_value = random.randint(1, 1000000)
-    prediction_time = binary_search(numbers, prediction_value)[1]
-
-    # Generate prediction choices
-    choices = [prediction_time]
+    choices = []
     while len(choices) < 4:
-        choice = random.uniform(0, max(search_data, key=lambda x: x[1])[1])
-        choices.append(choice)
+        random_choice = random.choice(numbers)
+        if random_choice not in choices:
+            choices.append(random_choice)
+    choices.append(index_final)
     random.shuffle(choices)
 
-    # Display search results and prediction
+    # Display search results
     screen.fill(BACKGROUND_COLOR)
     title = FONT_LARGE.render("Search Results", True, TEXT_COLOR)
     screen.blit(title, (50, 50))
 
+    bar_width = 400
+    bar_height = 30
     y = 100
-    max_time = max([sd[2] for sd in search_data])
     for data in search_data:
-        result = FONT_MEDIUM.render(f"{data[0]}: Time Taken = {data[2]:.6f}s", True, TEXT_COLOR)
+        result = FONT_MEDIUM.render(f"{data[0]}: Time Taken = {data[1]*1000:.2f} ms, Index = {data[2]}", True, TEXT_COLOR)
         screen.blit(result, (100, y))
-        draw_bar_chart(50, y + 20, 300, 20, data[2], max_time, prediction_time)
+
+        animation_width = 0
+        while animation_width <= int((data[1] / max_time) * bar_width):
+            pygame.draw.rect(screen, BAR_COLOR, (100, y + 20, animation_width, bar_height))
+            pygame.display.update()
+            time.sleep(0.02)  
+            animation_width += 5 
+
         y += 50
 
-    prediction_text = FONT_LARGE.render(f"Predict the index of {prediction_value}:", True, TEXT_COLOR)
+    prediction_text = FONT_LARGE.render(f"Predict the value:", True, TEXT_COLOR)
     screen.blit(prediction_text, (50, y + 50))
 
     y += 100
+    choice_rects = []
     for i, choice in enumerate(choices):
-        choice_text = FONT_MEDIUM.render(f"{i + 1}. {search_data[i][1]}", True, TEXT_COLOR)
+        choice_text = FONT_MEDIUM.render(f"{i + 1}. {choice}", True, TEXT_COLOR)
         choice_rect = pygame.Rect(100, y, choice_text.get_width() + 20, choice_text.get_height() + 10)
+        choice_rects.append(choice_rect)
         pygame.draw.rect(screen, BUTTON_COLOR, choice_rect)
         screen.blit(choice_text, (105, y + 5))
         y += 50
 
     pygame.display.update()
 
+    
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                return_to_menu = True
                 pygame.quit()
-                quit()
+                return return_to_menu
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                for i, choice in enumerate(choices):
-                    choice_rect = pygame.Rect(100, 300 + i * 50, 200, 40)
+                for i, choice_rect in enumerate(choice_rects): 
                     if choice_rect.collidepoint(mouse_pos):
-                        if i == choices.index(prediction_time):
-                            # User predicted correctly
+                        print(choices[i + 1])
+                        if choices[i] == index_final:
+                            
                             result_text = FONT_LARGE.render("Correct!", True, (0, 200, 0))
                             screen.blit(result_text, (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
 
@@ -291,28 +211,93 @@ def play_game():
                             result_text = FONT_LARGE.render("Incorrect!", True, (200, 0, 0))
                             screen.blit(result_text, (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
                             collection.insert_one({"name": "Anonymous", "correct_answer": 0})
-
                         pygame.display.update()
                         pygame.time.delay(2000)
                         display_menu()
 
+def binary_search(arr, target):
+    start = time.time()
+    left = 0
+    right = len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid, time.time() - start  
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1, time.time() - start  
 
-# Function to draw bar chart
-def draw_bar_chart(x, y, width, height, value, max_value, target_value):
-    bar_height = height
-    bar_width = width * (value / max_value)
-    rect = pygame.Rect(x, y, bar_width, bar_height)
-    pygame.draw.rect(screen, BUTTON_COLOR, rect)
-    pygame.display.update()
-    pygame.time.delay(10)
-    if value == target_value:
-        return
-    if value < target_value:
-        value += 0.01  # Adjust this value for speed of animation
-        if value > target_value:
-            value = target_value
-        draw_bar_chart(x, y, width, height, value, max_value, target_value)
+# Function to perform Jump Search
+def jump_search(arr, target):
+    start = time.time()
+    n = len(arr)
+    step = int(math.sqrt(n))
+    prev = 0
+    while arr[min(step, n) - 1] < target:
+        prev = step
+        step += int(math.sqrt(n))
+        if prev >= n:
+            return -1, time.time() - start
+    while arr[prev] < target:
+        prev += 1
+        if prev == min(step, n):
+            return -1, time.time() - start
+    if arr[prev] == target:
+        return prev, time.time() - start
+    return -1, time.time() - start
 
+def exponential_search(arr, target):
+    start = time.time()
+    n = len(arr)
+    if arr[0] == target:
+        return 0, time.time() - start
+
+    i = 1
+    while i < n and arr[i] <= target:
+        i *= 2
+
+    left = i // 2
+    right = min(i, n)
+
+    while left < right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid, time.time() - start
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid
+
+    return -1, time.time() - start  
+def fibonacci_search(arr, target):
+    start = time.time()
+    n = len(arr)
+    fib_n = 0
+    fib_nm1 = 1
+    fib_nm2 = 0
+    while fib_n < n:
+        fib_nm2 = fib_nm1
+        fib_nm1 = fib_n
+        fib_n = fib_nm1 + fib_nm2
+    offset = -1
+    while fib_n > 1:
+        i = min(offset + fib_nm2, n - 1)
+        if arr[i] < target:
+            fib_n = fib_nm1
+            fib_nm1 = fib_nm2
+            fib_nm2 = fib_n - fib_nm1
+            offset = i
+        elif arr[i] > target:
+            fib_n = fib_nm2
+            fib_nm1 = fib_nm1 - fib_nm2
+            fib_nm2 = fib_n - fib_nm1
+        else:
+            return i, time.time() - start
+    if fib_nm1 and offset + 1 < n and arr[offset + 1] == target:
+        return offset + 1, time.time() - start
+    return -1, time.time() - start  
 
 # Start the game
 display_menu()

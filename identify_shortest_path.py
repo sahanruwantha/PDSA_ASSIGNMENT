@@ -16,8 +16,8 @@ WIDTH, HEIGHT = 800, 600
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
-BLUE = (70, 130, 180)  # Steel Blue
-RED = (220, 20, 60)  # Crimson Red
+BLUE = (70, 130, 180)  
+RED = (220, 20, 60)  
 FONT_NAME = "Arial"
 FONT_SIZE = 18
 CITY_RADIUS = 20
@@ -75,7 +75,7 @@ class Game:
         for i in range(NUM_CITIES):
             x = random.randint(CITY_RADIUS, WIDTH - CITY_RADIUS)
             y = random.randint(CITY_RADIUS, HEIGHT - CITY_RADIUS)
-            city = City(chr(65 + i), x, y)  # City names A, B, C, ...
+            city = City(chr(65 + i), x, y)  # City names A, B, C, etc
             cities.append(city)
         return cities
 
@@ -92,10 +92,9 @@ class Game:
 
     # Draw cities and distances on the screen
     def draw(self):
-        self.screen.fill(WHITE)  # Light gray background
+        self.screen.fill(WHITE)  
         for city in self.cities:
-            color = RED if city.selected else BLUE  # Highlight the selected city
-            pygame.draw.circle(self.screen, color, (city.x, city.y), CITY_RADIUS)
+            color = RED if city.selected else BLUE  
             pygame.draw.circle(self.screen, BLACK, (city.x, city.y), CITY_RADIUS, 2)
             text = self.font.render(city.name, True, BLACK)
             text_rect = text.get_rect(center=(city.x, city.y))
@@ -106,7 +105,7 @@ class Game:
                 distance = self.distances[city1][city2]
                 x1, y1 = [city.x for city in self.cities if city.name == city1][0], [city.y for city in self.cities if city.name == city1][0]
                 x2, y2 = [city.x for city in self.cities if city.name == city2][0], [city.y for city in self.cities if city.name == city2][0]
-                pygame.draw.aaline(self.screen, BLACK, (x1, y1), (x2, y2))  # Smooth line drawing
+                pygame.draw.aaline(self.screen, BLACK, (x1, y1), (x2, y2)) 
                 text = self.font.render(str(distance), True, BLACK)
                 text_rect = text.get_rect(center=((x1 + x2) // 2, (y1 + y2) // 2))
                 self.screen.blit(text, text_rect)
@@ -247,7 +246,7 @@ class InputBox:
 
     def draw(self, screen):
         # Draw the input box and the text surface
-        pygame.draw.rect(screen, self.color, self.rect, 2, border_radius=8)  # Rounded border
+        pygame.draw.rect(screen, self.color, self.rect, 2, border_radius=8) 
         screen.blit(self.txt_surface, (self.rect.x + 10, self.rect.y + 10))
 
 if __name__ == "__main__":
