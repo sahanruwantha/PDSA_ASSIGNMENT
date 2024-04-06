@@ -206,8 +206,8 @@ class Game:
                                         print("Correct!")
                                     else:
                                         print(f"Wrong! Correct distances: Dijkstra - {correct_distance_dijkstra}, Bellman-Ford - {correct_distance_bf}")
-                                    print(f"Dijkstra's algorithm execution time: {duration_dijkstra} seconds")
-                                    print(f"Bellman-Ford algorithm execution time: {duration_bf} seconds")
+                                    print(f"Dijkstra's algorithm execution time: {duration_dijkstra} milliseconds")
+                                    print(f"Bellman-Ford algorithm execution time: {duration_bf} milliseconds")
                                     # Record algorithm execution durations in the database
                                     collection.insert_one({"player_name": self.player_name, "dijkstra_duration": duration_dijkstra, "bellman_ford_duration": duration_bf})
                                     self.selected_cities = []
