@@ -16,8 +16,8 @@ WIDTH, HEIGHT = 800, 600
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
-BLUE = (70, 130, 180)  
-RED = (220, 20, 60)  
+BLUE = (70, 130, 180)  # Steel Blue
+RED = (220, 20, 60)  # Crimson Red
 FONT_NAME = "Arial"
 FONT_SIZE = 18
 CITY_RADIUS = 20
@@ -35,7 +35,7 @@ class City:
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)  # Set resizable flag
         pygame.display.set_caption("Identify Shortest Path")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont(FONT_NAME, FONT_SIZE)
@@ -75,7 +75,7 @@ class Game:
         for i in range(NUM_CITIES):
             x = random.randint(CITY_RADIUS, WIDTH - CITY_RADIUS)
             y = random.randint(CITY_RADIUS, HEIGHT - CITY_RADIUS)
-            city = City(chr(65 + i), x, y)  # City names A, B, C, etc
+            city = City(chr(65 + i), x, y)  # City names A, B, C, ...
             cities.append(city)
         return cities
 
@@ -92,9 +92,10 @@ class Game:
 
     # Draw cities and distances on the screen
     def draw(self):
-        self.screen.fill(WHITE)  
+        self.screen.fill(WHITE)  # Light gray background
         for city in self.cities:
-            color = RED if city.selected else BLUE  
+            color = RED if city.selected else BLUE  # Highlight the selected city
+            pygame.draw.circle(self.screen, color, (city.x, city.y), CITY_RADIUS)
             pygame.draw.circle(self.screen, BLACK, (city.x, city.y), CITY_RADIUS, 2)
             text = self.font.render(city.name, True, BLACK)
             text_rect = text.get_rect(center=(city.x, city.y))
@@ -105,7 +106,7 @@ class Game:
                 distance = self.distances[city1][city2]
                 x1, y1 = [city.x for city in self.cities if city.name == city1][0], [city.y for city in self.cities if city.name == city1][0]
                 x2, y2 = [city.x for city in self.cities if city.name == city2][0], [city.y for city in self.cities if city.name == city2][0]
-                pygame.draw.aaline(self.screen, BLACK, (x1, y1), (x2, y2)) 
+                pygame.draw.aaline(self.screen, BLACK, (x1, y1), (x2, y2))  # Smooth line drawing
                 text = self.font.render(str(distance), True, BLACK)
                 text_rect = text.get_rect(center=((x1 + x2) // 2, (y1 + y2) // 2))
                 self.screen.blit(text, text_rect)
@@ -162,6 +163,7 @@ class Game:
         input_box = InputBox(300, 200, 200, 40, font=self.font)
         input_box.text = ""
         input_box.active = True
+        print("dijkstra:", str(correct_distance_dijkstra) + " Bellman-Ford:" ,str(correct_distance_bf))
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -212,6 +214,9 @@ class Game:
                                     # Unhighlight selected cities
                                     for city in self.cities:
                                         city.selected = False
+                elif event.type == pygame.VIDEORESIZE:
+                    # Handle window resize
+                    self.screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
 
         pygame.quit()
 
@@ -246,7 +251,7 @@ class InputBox:
 
     def draw(self, screen):
         # Draw the input box and the text surface
-        pygame.draw.rect(screen, self.color, self.rect, 2, border_radius=8) 
+        pygame.draw.rect(screen, self.color, self.rect, 2, border_radius=8)  # Rounded border
         screen.blit(self.txt_surface, (self.rect.x + 10, self.rect.y + 10))
 
 if __name__ == "__main__":
