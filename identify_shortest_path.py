@@ -172,7 +172,7 @@ class Game:
                 input_box.handle_event(event)
 
             self.screen.fill(WHITE)
-            prompt_text = self.font.render(f"Enter the correct shortest distance (Dijkstra: {correct_distance_dijkstra}, Bellman-Ford: {correct_distance_bf}):", True, BLACK)
+            prompt_text = self.font.render(f"Enter the correct shortest distance:", True, BLACK)
             prompt_rect = prompt_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
             self.screen.blit(prompt_text, prompt_rect)
             input_box.draw(self.screen)
