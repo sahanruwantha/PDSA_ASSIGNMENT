@@ -1,132 +1,141 @@
 [{
   "_id": {
-    "$oid": "661032f790953730ae8fe348"
+    "$oid": "66120828c460a6204c945d56"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "binary_search",
+  "time_taken": 0.000017881393432617188,
+  "index": 215
 },
 {
   "_id": {
-    "$oid": "6610330e90953730ae8fe349"
+    "$oid": "66120828c460a6204c945d57"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "jump_search",
+  "time_taken": 0.000016689300537109375,
+  "index": 215
 },
 {
   "_id": {
-    "$oid": "6610334e90953730ae8fe34a"
+    "$oid": "66120828c460a6204c945d58"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "exponential_search",
+  "time_taken": 0.000013113021850585938,
+  "index": 215
 },
 {
   "_id": {
-    "$oid": "6610335c90953730ae8fe34b"
+    "$oid": "66120828c460a6204c945d59"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "fibonacci_search",
+  "time_taken": 0.000020503997802734375,
+  "index": 215
 },
 {
   "_id": {
-    "$oid": "66103391b487024645e3db38"
+    "$oid": "66120828c460a6204c945d5a"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "binary_search",
+  "time_taken": 0.02370166778564453,
+  "index": 215
 },
 {
   "_id": {
-    "$oid": "6610339fb487024645e3db39"
+    "$oid": "66120828c460a6204c945d5b"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "jump_search",
+  "time_taken": 0.0011034011840820312,
+  "index": 215
 },
 {
   "_id": {
-    "$oid": "661033b5b487024645e3db3a"
+    "$oid": "66120828c460a6204c945d5c"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "exponential_search",
+  "time_taken": 0.0009112358093261719,
+  "index": 215
 },
 {
   "_id": {
-    "$oid": "661034562f28f63e3336183b"
+    "$oid": "66120828c460a6204c945d5d"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "fibonacci_search",
+  "time_taken": 0.0010559558868408203,
+  "index": 215
 },
 {
   "_id": {
-    "$oid": "6610346b2f28f63e3336183c"
-  },
-  "name": "Anonymous",
-  "correct_answer": 0
-},
-{
-  "_id": {
-    "$oid": "6610407868bc87ff7f76ae33"
-  },
-  "name": "sahan",
-  "correct_answer": 1
-},
-{
-  "_id": {
-    "$oid": "6610412055e6713e96551081"
+    "$oid": "66120855c460a6204c945d5e"
   },
   "name": "sahan",
   "correct_answer": 1
 },
 {
   "_id": {
-    "$oid": "6610412b55e6713e96551082"
+    "$oid": "66120862c460a6204c945d5f"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "binary_search",
+  "time_taken": 0.000018596649169921875,
+  "index": 4220
 },
 {
   "_id": {
-    "$oid": "6610fb0a0eae66d4ff345ff4"
+    "$oid": "66120862c460a6204c945d60"
   },
-  "name": "sahan",
-  "correct_answer": 1
+  "search_algorithm": "jump_search",
+  "time_taken": 0.00012040138244628906,
+  "index": 4220
 },
 {
   "_id": {
-    "$oid": "6610fb140eae66d4ff345ff5"
+    "$oid": "66120862c460a6204c945d61"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "exponential_search",
+  "time_taken": 0.000018358230590820312,
+  "index": 4220
 },
 {
   "_id": {
-    "$oid": "6610fc57a7ad1926b93c83b5"
+    "$oid": "66120862c460a6204c945d62"
   },
-  "name": "sahan",
-  "correct_answer": 1
+  "search_algorithm": "fibonacci_search",
+  "time_taken": 0.000022649765014648438,
+  "index": 4220
 },
 {
   "_id": {
-    "$oid": "6610fc61a7ad1926b93c83b6"
+    "$oid": "66120862c460a6204c945d63"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "binary_search",
+  "time_taken": 0.0019044876098632812,
+  "index": 4220
 },
 {
   "_id": {
-    "$oid": "661114b748493fe75d5d8e78"
+    "$oid": "66120862c460a6204c945d64"
   },
-  "name": "sahan",
-  "correct_answer": 1
+  "search_algorithm": "jump_search",
+  "time_taken": 0.0012056827545166016,
+  "index": 4220
 },
 {
   "_id": {
-    "$oid": "661114c848493fe75d5d8e79"
+    "$oid": "66120862c460a6204c945d65"
   },
-  "name": "Anonymous",
-  "correct_answer": 0
+  "search_algorithm": "exponential_search",
+  "time_taken": 0.000989675521850586,
+  "index": 4220
 },
 {
   "_id": {
-    "$oid": "661114d648493fe75d5d8e7a"
+    "$oid": "66120862c460a6204c945d66"
+  },
+  "search_algorithm": "fibonacci_search",
+  "time_taken": 0.0009391307830810547,
+  "index": 4220
+},
+{
+  "_id": {
+    "$oid": "6612086fc460a6204c945d67"
   },
   "name": "Anonymous",
   "correct_answer": 0

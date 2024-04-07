@@ -1,49 +1,50 @@
 [{
   "_id": {
-    "$oid": "660fe0eb07021322d0953532"
+    "$oid": "6612049ff6f0310ad95d3efd"
   },
-  "player_name": "sahan",
-  "correct_response": 390729
+  "Bubble Sort": 1.9540245532989502,
+  "Insertion Sort": 0.8740940093994141,
+  "Merge Sort": 0.02714061737060547,
+  "Radix Sort": 0.6721599102020264,
+  "Shell Sort": 0.017897844314575195,
+  "Quick Sort": 0.01156473159790039,
+  "Tim Sort": 0.014339447021484375
 },
 {
   "_id": {
-    "$oid": "6610b7a00446d2c3c6e13071"
+    "$oid": "661204daf6f0310ad95d3efe"
   },
   "player_name": "sahan",
-  "correct_response": 583715
+  "correct_response": 735625
 },
 {
   "_id": {
-    "$oid": "6610b7e40446d2c3c6e13072"
+    "$oid": "66120539f6f0310ad95d3eff"
   },
   "player_name": "sahan",
-  "correct_response": 145375
+  "correct_response": 396715
 },
 {
   "_id": {
-    "$oid": "6610f9660e21f2012f98ca13"
+    "$oid": "66120571af3ed36e05ca46a6"
   },
-  "player_name": "sahan",
-  "correct_response": 718397
+  "Bubble Sort": 1.978684902191162,
+  "Insertion Sort": 0.8641014099121094,
+  "Merge Sort": 0.016005754470825195,
+  "Radix Sort": 0.6551206111907959,
+  "Shell Sort": 0.01784539222717285,
+  "Quick Sort": 0.01319432258605957,
+  "Tim Sort": 0.013873100280761719
 },
 {
   "_id": {
-    "$oid": "6610f9700e21f2012f98ca14"
+    "$oid": "661206bf381a52eacdeb9884"
   },
-  "player_name": "sahan",
-  "correct_response": 729075
-},
-{
-  "_id": {
-    "$oid": "6610faa0cd6e4c82e95ae907"
-  },
-  "player_name": "sahan",
-  "correct_response": 799163
-},
-{
-  "_id": {
-    "$oid": "6610faafcd6e4c82e95ae908"
-  },
-  "player_name": "sahan",
-  "correct_response": 792722
+  "Bubble Sort": 1.8002712726593018,
+  "Insertion Sort": 0.8400740623474121,
+  "Merge Sort": 0.015359878540039062,
+  "Radix Sort": 0.6356477737426758,
+  "Shell Sort": 0.018568754196166992,
+  "Quick Sort": 0.010879039764404297,
+  "Tim Sort": 0.01343226432800293
 }]
