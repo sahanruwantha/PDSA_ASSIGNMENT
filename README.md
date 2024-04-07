@@ -6,34 +6,18 @@ The program uses a recursive backtracking algorithm to solve the Eight Queens Pu
 
 ![Eight Queens Puzzle UI](assets/eight_queens_puzzle.gif)
 
-## 3.1.2. UI screenshot allowing game players to provide answers
-
-
-## 3.1.3. UI screenshots when game players provide correct answer & incorrect answers
-
-![Correct Answer](correct_answer.jpg)
-
-![Incorrect Answer](incorrect_answer.jpg)
-
 ## 3.1.4. Explain the Validations and Exception Handling in this application.
 
 The application performs input validation to ensure that the player enters a valid name. It also handles the `pygame.QUIT` event to gracefully exit the application when the user closes the window. Additionally, it catches any exceptions that may occur during the game loop and handles them appropriately.
 
 ## 3.1.5. Code Segment screenshots: unit Testing
 
-
+[Test](URL)
 
 ## 3.1.6. Indicate the Data Structures used and Explain its purpose
 
 The program uses a 2D list (`board`) to represent the chessboard. Each element in the list represents a square on the board, and its value is either 0 (empty) or 1 (queen placed). The `solutions` list is used to store all the valid solutions found by the backtracking algorithm.
 
-## 3.1.7. Screenshot of the Normalized DB Table Structure used for this Game Option
-
-
-
-## 3.1.8. Compare the time taken & logic used for the Sequential program & the Threaded program.
-
-_Note: The provided code does not include a sequential implementation of the Eight Queens Puzzle solver._
 
 # 3.2. Tic-Tac-Toe
 
@@ -43,30 +27,19 @@ The program implements a Tic-Tac-Toe game where the player competes against an A
 
 ![Tic-Tac-Toe GIF](assets/tik_tak_toe.gif)
 
-## 3.2.2. UI screenshot allowing game players to provide answers
-
-![UI for Entering Username](username_input.jpg)
-
-## 3.2.3. UI screenshots when game players provide correct answer & incorrect answers
-
-![Winner Message](winner_message.jpg)
-
-![Tie Message](tie_message.jpg)
-
 ## 3.2.4. Explain the Validations and Exception Handling in this application.
 
 The application validates the user's input for the username and handles the `pygame.QUIT` event to gracefully exit the application. It also catches any exceptions that may occur during the game loop or database operations and handles them appropriately.
 
 ## 3.2.5. Code Segment screenshots: unit Testing
 
-
+[Test](URL)
 
 ## 3.2.6. Indicate the Data Structures used and purpose
 
 The program uses a list (`board`) to represent the Tic-Tac-Toe board. Each element in the list corresponds to a cell on the board and can have a value of ' ' (empty), 'X' (player's move), or 'O' (computer's move).
 
 ## 3.2.7. Screenshot of the Normalized DB Table Structure used for this Game Option
-
 
 # 3.3. Identify Shortest Path
 
@@ -76,15 +49,6 @@ The program generates a random set of cities with randomly assigned distances be
 
 ![Identify Shortest Path GIF](assets/identify_shortest_path.gif)
 
-## 3.3.2. UI screenshot allowing game players to provide answers
-
-![City Selection](city_selection.jpg)
-
-## 3.3.3. UI screenshots when game players provide correct answer & incorrect answers
-
-![Correct Distance](correct_distance.jpg)
-
-![Incorrect Distance](incorrect_distance.jpg)
 
 ## 3.3.4. Explain the Validations and Exception Handling in this application.
 
@@ -92,18 +56,31 @@ The application handles the `pygame.QUIT` event to gracefully exit the applicati
 
 ## 3.3.5. Code Segment screenshots: unit Testing
 
-
+[Test](URL)
 
 ## 3.3.6. Indicate the Data Structures used with its purpose
 
 The program uses a dictionary (`distances`) to store the distances between cities. The keys of the dictionary are the city names, and the values are nested dictionaries containing the distances to other cities.
 
-## 3.3.7. Screenshot of the Normalized DB Table Structure used for this Game Option
-
-
 
 ## 3.3.8. Compare the Shortest path identifying algorithms (logic/complexity, which scenarios are best to use it, etc.)
 
+## 3.3.8. Compare the Shortest path identifying algorithms (logic/complexity, which scenarios are best to use it, etc.)
+
+**1. Dijkstra's Algorithm**:
+- **Logic**: Dijkstra's algorithm is a greedy algorithm that finds the shortest path between a single source node and all other nodes in a weighted graph. It works by maintaining a set of visited nodes and a priority queue of unvisited nodes. At each iteration, the algorithm selects the unvisited node with the smallest distance from the source and marks it as visited. It then updates the distances to all unvisited neighbors of the current node.
+- **Time Complexity**: The time complexity of Dijkstra's algorithm is O((V+E) log V), where V is the number of vertices (cities), and E is the number of edges (connections between cities). This complexity assumes the use of a binary heap or Fibonacci heap for the priority queue.
+- **Best Scenarios**: Dijkstra's algorithm is suitable for graphs with non-negative edge weights (distances). It is commonly used in various applications, such as network routing, GPS navigation, and social network analysis.
+
+**2. Bellman-Ford Algorithm**:
+- **Logic**: The Bellman-Ford algorithm is a dynamic programming algorithm that finds the shortest path between a single source node and all other nodes in a weighted graph. It works by repeatedly updating the distances to all nodes based on the distances of their neighbors. The algorithm performs V-1 iterations, where V is the number of vertices.
+- **Time Complexity**: The time complexity of the Bellman-Ford algorithm is O(VE), where V is the number of vertices (cities), and E is the number of edges (connections between cities).
+- **Best Scenarios**: The Bellman-Ford algorithm can handle graphs with negative edge weights, making it suitable for scenarios where negative distances are possible, such as in network routing with link costs or currency arbitrage problems. However, it cannot handle graphs with negative cycles (a cycle with an overall negative weight).
+
+**3. Floyd-Warshall Algorithm**:
+- **Logic**: The Floyd-Warshall algorithm is a dynamic programming algorithm that finds the shortest paths between all pairs of nodes in a weighted graph. It works by iteratively updating a distance matrix, considering all possible intermediate nodes between each pair of nodes.
+- **Time Complexity**: The time complexity of the Floyd-Warshall algorithm is O(V^3), where V is the number of vertices (cities).
+- **Best Scenarios**: The Floyd-Warshall algorithm is useful when you need to find the shortest paths between all pairs of nodes in a graph. It is commonly used in applications such as routing in computer networks, image processing, and data mining.
 
 # 3.4. Remember the Value Index
 
@@ -112,15 +89,6 @@ The program uses a dictionary (`distances`) to store the distances between citie
 ## 3.4.1. UI screenshot allowing game players to provide answers
 
 ![Value Index Input](value_index_input.jpg)
-
-
-## 3.4.2. UI screenshots when game players provide correct answer & incorrect answers
-
-
-
-## 3.4.3. Chart Containing the time Taken for each Sorting Technique
-
-
 
 ## 3.4.4. Compare the sorting techniques (e.g., explain the logic used in the sorting Techniques, determine their complexity, which scenarios are best to use it, etc.).
 
@@ -144,18 +112,6 @@ The choice of sorting algorithm depends on the size and characteristics of the d
 # 3.5. Predict the Value Index
 
 ![Predict Value Index](assets/predict_the_value_index.gif)
-
-## 3.5.1. UI screenshot allowing game players to provide answers
-
-![Predict the Value Index](predict_value_index.jpg)
-
-## 3.5.2. UI screenshots when game players provide correct answer & incorrect answers
-
-![Correct Prediction](correct_prediction.jpg)
-
-![Incorrect Prediction](incorrect_prediction.jpg)
-
-## 3.5.3. Chart Containing the time Taken for each search Technique
 
 
 ## 3.5.4. Compare the search techniques (e.g., explain the logic used in the search Techniques, determine their complexity, which scenarios are best to use it, etc.).
