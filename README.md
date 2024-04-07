@@ -4,14 +4,16 @@
 
 The program uses a recursive backtracking algorithm to solve the Eight Queens Puzzle. The `solve_queens` function is responsible for finding all possible solutions. It starts by placing a queen in the first column and recursively tries to place the remaining queens in the subsequent columns. The `is_safe` function checks if a queen can be placed on a given position by ensuring that it does not conflict with any previously placed queens in the same row, column, or diagonal.
 
+![Eight Queens Puzzle UI](assets/eight_queens_puzzle.gif)
+
 ## 3.1.2. UI screenshot allowing game players to provide answers
 
-![UI for Entering Player Name](random_image_1.jpg)
 
 ## 3.1.3. UI screenshots when game players provide correct answer & incorrect answers
 
-![Correct Answer](random_image_2.jpg)
-![Incorrect Answer](random_image_3.jpg)
+![Correct Answer](correct_answer.jpg)
+
+![Incorrect Answer](incorrect_answer.jpg)
 
 ## 3.1.4. Explain the Validations and Exception Handling in this application.
 
@@ -28,8 +30,10 @@ The program uses a 2D list (`board`) to represent the chessboard. Each element i
 ## 3.1.7. Screenshot of the Normalized DB Table Structure used for this Game Option
 
 
+
 ## 3.1.8. Compare the time taken & logic used for the Sequential program & the Threaded program.
 
+_Note: The provided code does not include a sequential implementation of the Eight Queens Puzzle solver._
 
 # 3.2. Tic-Tac-Toe
 
@@ -37,20 +41,24 @@ The program uses a 2D list (`board`) to represent the chessboard. Each element i
 
 The program implements a Tic-Tac-Toe game where the player competes against an AI opponent. The AI uses the Minimax algorithm with alpha-beta pruning to make optimal moves. The algorithm recursively explores all possible game states and evaluates the best move based on a scoring system (-1 for a loss, 0 for a tie, and 1 for a win).
 
+![Tic-Tac-Toe GIF](assets/tik_tak_toe.gif)
+
 ## 3.2.2. UI screenshot allowing game players to provide answers
 
-![UI for Entering Username](random_image_4.jpg)
+![UI for Entering Username](username_input.jpg)
 
 ## 3.2.3. UI screenshots when game players provide correct answer & incorrect answers
 
-![Winner Message](random_image_5.jpg)
-![Tie Message](random_image_6.jpg)
+![Winner Message](winner_message.jpg)
+
+![Tie Message](tie_message.jpg)
 
 ## 3.2.4. Explain the Validations and Exception Handling in this application.
 
 The application validates the user's input for the username and handles the `pygame.QUIT` event to gracefully exit the application. It also catches any exceptions that may occur during the game loop or database operations and handles them appropriately.
 
 ## 3.2.5. Code Segment screenshots: unit Testing
+
 
 
 ## 3.2.6. Indicate the Data Structures used and purpose
@@ -66,14 +74,17 @@ The program uses a list (`board`) to represent the Tic-Tac-Toe board. Each eleme
 
 The program generates a random set of cities with randomly assigned distances between them. It then allows the player to select two cities by clicking on them. The program uses Dijkstra's algorithm to calculate the shortest path between the selected cities. The player is prompted to enter the correct shortest distance, and their response is recorded.
 
+![Identify Shortest Path GIF](assets/identify_shortest_path.gif)
+
 ## 3.3.2. UI screenshot allowing game players to provide answers
 
-![City Selection](random_image_7.jpg)
+![City Selection](city_selection.jpg)
 
 ## 3.3.3. UI screenshots when game players provide correct answer & incorrect answers
 
-![Correct Distance](random_image_8.jpg)
-![Incorrect Distance](random_image_9.jpg)
+![Correct Distance](correct_distance.jpg)
+
+![Incorrect Distance](incorrect_distance.jpg)
 
 ## 3.3.4. Explain the Validations and Exception Handling in this application.
 
@@ -81,7 +92,7 @@ The application handles the `pygame.QUIT` event to gracefully exit the applicati
 
 ## 3.3.5. Code Segment screenshots: unit Testing
 
-*Note: No unit tests are provided in the given code.*
+
 
 ## 3.3.6. Indicate the Data Structures used with its purpose
 
@@ -90,24 +101,29 @@ The program uses a dictionary (`distances`) to store the distances between citie
 ## 3.3.7. Screenshot of the Normalized DB Table Structure used for this Game Option
 
 
+
 ## 3.3.8. Compare the Shortest path identifying algorithms (logic/complexity, which scenarios are best to use it, etc.)
 
 
 # 3.4. Remember the Value Index
 
+![Remember the Value Index GIF](assets/remember_the_value_index.gif)
+
 ## 3.4.1. UI screenshot allowing game players to provide answers
 
-![Value Index Input](random_image_10.jpg)
+![Value Index Input](value_index_input.jpg)
+
 
 ## 3.4.2. UI screenshots when game players provide correct answer & incorrect answers
+
 
 
 ## 3.4.3. Chart Containing the time Taken for each Sorting Technique
 
 
+
 ## 3.4.4. Compare the sorting techniques (e.g., explain the logic used in the sorting Techniques, determine their complexity, which scenarios are best to use it, etc.).
 
-The provided code implements the following sorting techniques:
 
 1. **Bubble Sort**: Compares adjacent elements and swaps them if they are in the wrong order. It has a time complexity of O(n^2), making it inefficient for large datasets.
 
@@ -127,21 +143,23 @@ The choice of sorting algorithm depends on the size and characteristics of the d
 
 # 3.5. Predict the Value Index
 
+![Predict Value Index](assets/predict_the_value_index.gif)
+
 ## 3.5.1. UI screenshot allowing game players to provide answers
 
-![Predict Value Index](random_image_11.jpg)
+![Predict the Value Index](predict_value_index.jpg)
 
 ## 3.5.2. UI screenshots when game players provide correct answer & incorrect answers
 
-![Correct Prediction](random_image_12.jpg)
-![Incorrect Prediction](random_image_13.jpg)
+![Correct Prediction](correct_prediction.jpg)
+
+![Incorrect Prediction](incorrect_prediction.jpg)
 
 ## 3.5.3. Chart Containing the time Taken for each search Technique
 
 
 ## 3.5.4. Compare the search techniques (e.g., explain the logic used in the search Techniques, determine their complexity, which scenarios are best to use it, etc.).
 
-The provided code implements the following search techniques:
 
 1. **Binary Search**: Repeatedly divides the search interval in half based on whether the target value is higher or lower than the middle element. It has a time complexity of O(log n) in the average and best cases, but requires the input array to be sorted.
 
