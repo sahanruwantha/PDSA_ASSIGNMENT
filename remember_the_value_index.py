@@ -199,45 +199,53 @@ def tim_sort(numbers):
 # Sort the numbers and record the time taken
 def sort_numbers(numbers):
     sorting_times = []
+    sorting_times_db = {}
 
     start_time = time.time()
     bubble_sort(numbers.copy())
     end_time = time.time()
     sorting_times.append(("Bubble Sort", end_time - start_time))
+    sorting_times_db["Bubble Sort"] = end_time - start_time
 
     start_time = time.time()
     insertion_sort(numbers.copy())
     end_time = time.time()
     sorting_times.append(("Insertion Sort", end_time - start_time))
+    sorting_times_db["Insertion Sort"] = end_time - start_time
 
     start_time = time.time()
     merge_sort(numbers.copy())
     end_time = time.time()
     sorting_times.append(("Merge Sort", end_time - start_time))
+    sorting_times_db["Merge Sort"] = end_time - start_time
 
     start_time = time.time()
     radix_sort(numbers.copy())
     end_time = time.time()
     sorting_times.append(("Radix Sort", end_time - start_time))
+    sorting_times_db["Radix Sort"] = end_time - start_time
 
     start_time = time.time()
     shell_sort(numbers.copy())
     end_time = time.time()
     sorting_times.append(("Shell Sort", end_time - start_time))
+    sorting_times_db["Shell Sort"] = end_time - start_time
 
     start_time = time.time()
     quick_sort(numbers.copy())
     end_time = time.time()
     sorting_times.append(("Quick Sort", end_time - start_time))
+    sorting_times_db["Quick Sort"] = end_time - start_time
 
     start_time = time.time()
     tim_sort(numbers.copy())
     end_time = time.time()
     sorting_times.append(("Tim Sort", end_time - start_time))
+    sorting_times_db["Tim Sort"] = end_time - start_time
 
+    collection.insert_one(sorting_times_db)
     return numbers, sorting_times
 
-# Display the sorted numbers
 def display_numbers(sorted_numbers):
     y_offset = 0
     small_font = pygame.font.Font(None, 50)  # Define a smaller font size
@@ -315,6 +323,7 @@ def draw_progress_bar(screen, x, y, width, height, progress, max_value, color):
 
     # Blit the bar surface onto the main screen
     screen.blit(bar_surface, (x, y))
+
 def animate_progress_bars(screen, sorting_times):
     screen.fill((0, 0, 0))  # Black background
     max_time = max(time for _, time in sorting_times)
@@ -339,7 +348,6 @@ def animate_progress_bars(screen, sorting_times):
     pygame.time.wait(2000)  # Wait for 2 seconds before exiting
 
 def game_loop():
-    time.sleep(20)
     running = True
     numbers = generate_random_numbers_with_animation()
     sorted_numbers, sorting_times = sort_numbers(numbers)
@@ -382,4 +390,3 @@ def game_loop():
 
 # Run the game loop
 game_loop()
-

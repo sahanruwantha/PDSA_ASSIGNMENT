@@ -2,7 +2,7 @@ import pygame
 import random
 from pymongo import MongoClient
 import time
-import math 
+import math
 
 # Initialize Pygame
 pygame.init()
@@ -71,7 +71,6 @@ def generate_random_numbers():
     return arr
 
 
-
 # Function to display the game menu
 def display_menu():
     screen.fill(BACKGROUND_COLOR)
@@ -79,7 +78,7 @@ def display_menu():
     screen.blit(title, (WINDOW_WIDTH // 2 - title.get_width() // 2, 50))
 
     play_button = pygame.Rect(WINDOW_WIDTH // 2 - 100, WINDOW_HEIGHT // 2 - 25, 200, 50)
-    pygame.draw.rect(screen, BUTTON_COLOR, play_button, border_radius=5) 
+    pygame.draw.rect(screen, BUTTON_COLOR, play_button, border_radius=5)
     play_text = FONT_MEDIUM.render("Play", True, BUTTON_TEXT_COLOR)
     screen.blit(play_text, (WINDOW_WIDTH // 2 - play_text.get_width() // 2, WINDOW_HEIGHT // 2 - play_text.get_height() // 2))
 
@@ -94,7 +93,7 @@ def display_menu():
                 mouse_pos = pygame.mouse.get_pos()
                 if play_button.collidepoint(mouse_pos):
                     play_game()
-            elif event.type == pygame.MOUSEMOTION:  
+            elif event.type == pygame.MOUSEMOTION:
                 if play_button.collidepoint(event.pos):
                     pygame.draw.rect(screen, BUTTON_HOVER_COLOR, play_button, border_radius=5)
                 else:
@@ -104,7 +103,7 @@ def display_menu():
 
 
 def play_game():
-    return_to_menu = False 
+    return_to_menu = False
 
     numbers = generate_random_numbers()
     numbers.sort()
@@ -127,6 +126,14 @@ def play_game():
     choices.append(index_final)
     random.shuffle(choices)
 
+    # Insert search data into the database
+    for data in search_data:
+        collection.insert_one({
+            "search_algorithm": data[0],
+            "time_taken": data[1],
+            "index": data[2]
+        })
+
     # Display search results
     screen.fill(BACKGROUND_COLOR)
     title = FONT_LARGE.render("Search Results", True, TEXT_COLOR)
@@ -136,15 +143,16 @@ def play_game():
     bar_height = 30
     y = 100
     for data in search_data:
-        result = FONT_MEDIUM.render(f"{data[0]}: Time Taken = {data[1]*1000:.2f} ms, Index = {data[2]}", True, TEXT_COLOR)
+        result = FONT_MEDIUM.render(f"{data[0]}: Time Taken = {data[1] * 1000:.2f} ms, Index = {data[2]}", True,
+                                    TEXT_COLOR)
         screen.blit(result, (100, y))
 
         animation_width = 0
         while animation_width <= int((data[1] / max_time) * bar_width):
             pygame.draw.rect(screen, BAR_COLOR, (100, y + 20, animation_width, bar_height))
             pygame.display.update()
-            time.sleep(0.02)  
-            animation_width += 5 
+            time.sleep(0.02)
+            animation_width += 5
 
         y += 50
 
@@ -163,8 +171,6 @@ def play_game():
 
     pygame.display.update()
 
-    
-
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -173,13 +179,14 @@ def play_game():
                 return return_to_menu
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                for i, choice_rect in enumerate(choice_rects): 
+                for i, choice_rect in enumerate(choice_rects):
                     if choice_rect.collidepoint(mouse_pos):
                         print(choices[i + 1])
                         if choices[i] == index_final:
-                            
+
                             result_text = FONT_LARGE.render("Correct!", True, (0, 200, 0))
-                            screen.blit(result_text, (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
+                            screen.blit(result_text,
+                                        (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
 
                             # Get user name and save data
                             name = FONT_MEDIUM.render("Enter your name:", True, TEXT_COLOR)
@@ -209,11 +216,13 @@ def play_game():
                         else:
                             # User predicted incorrectly
                             result_text = FONT_LARGE.render("Incorrect!", True, (200, 0, 0))
-                            screen.blit(result_text, (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
+                            screen.blit(result_text,
+                                        (WINDOW_WIDTH // 2 - result_text.get_width() // 2, WINDOW_HEIGHT - 100))
                             collection.insert_one({"name": "Anonymous", "correct_answer": 0})
                         pygame.display.update()
                         pygame.time.delay(2000)
                         display_menu()
+
 
 def binary_search(arr, target):
     start = time.time()
@@ -222,12 +231,18 @@ def binary_search(arr, target):
     while left <= right:
         mid = (left + right) // 2
         if arr[mid] == target:
-            return mid, time.time() - start  
+            collection.insert_one({
+                "search_algorithm": "binary_search",
+                "time_taken": time.time() - start,
+                "index": mid
+            })
+            return mid, time.time() - start
         elif arr[mid] < target:
             left = mid + 1
         else:
             right = mid - 1
-    return -1, time.time() - start  
+    return -1, time.time() - start
+
 
 # Function to perform Jump Search
 def jump_search(arr, target):
@@ -245,13 +260,24 @@ def jump_search(arr, target):
         if prev == min(step, n):
             return -1, time.time() - start
     if arr[prev] == target:
+        collection.insert_one({
+            "search_algorithm": "jump_search",
+            "time_taken": time.time() - start,
+            "index": prev
+        })
         return prev, time.time() - start
     return -1, time.time() - start
+
 
 def exponential_search(arr, target):
     start = time.time()
     n = len(arr)
     if arr[0] == target:
+        collection.insert_one({
+            "search_algorithm": "exponential_search",
+            "time_taken": time.time() - start,
+            "index": 0
+        })
         return 0, time.time() - start
 
     i = 1
@@ -264,13 +290,20 @@ def exponential_search(arr, target):
     while left < right:
         mid = (left + right) // 2
         if arr[mid] == target:
+            collection.insert_one({
+                "search_algorithm": "exponential_search",
+                "time_taken": time.time() - start,
+                "index": mid
+            })
             return mid, time.time() - start
         elif arr[mid] < target:
             left = mid + 1
         else:
             right = mid
 
-    return -1, time.time() - start  
+    return -1, time.time() - start
+
+
 def fibonacci_search(arr, target):
     start = time.time()
     n = len(arr)
@@ -294,10 +327,21 @@ def fibonacci_search(arr, target):
             fib_nm1 = fib_nm1 - fib_nm2
             fib_nm2 = fib_n - fib_nm1
         else:
+            collection.insert_one({
+                "search_algorithm": "fibonacci_search",
+                "time_taken": time.time() - start,
+                "index": i
+            })
             return i, time.time() - start
     if fib_nm1 and offset + 1 < n and arr[offset + 1] == target:
+        collection.insert_one({
+            "search_algorithm": "fibonacci_search",
+            "time_taken": time.time() - start,
+            "index": offset + 1
+        })
         return offset + 1, time.time() - start
-    return -1, time.time() - start  
+    return -1, time.time() - start
+
 
 # Start the game
 display_menu()
