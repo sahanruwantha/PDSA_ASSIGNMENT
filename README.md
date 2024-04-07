@@ -113,9 +113,7 @@ The choice of sorting algorithm depends on the size and characteristics of the d
 
 ![Predict Value Index](assets/predict_the_value_index.gif)
 
-
 ## 3.5.4. Compare the search techniques (e.g., explain the logic used in the search Techniques, determine their complexity, which scenarios are best to use it, etc.).
-
 
 1. **Binary Search**: Repeatedly divides the search interval in half based on whether the target value is higher or lower than the middle element. It has a time complexity of O(log n) in the average and best cases, but requires the input array to be sorted.
 
