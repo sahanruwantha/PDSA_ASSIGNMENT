@@ -19,7 +19,7 @@ The application performs input validation to ensure that the player enters a val
 
 ## 3.1.5. Code Segment screenshots: unit Testing
 
-*Note: No unit tests are provided in the given code.*
+
 
 ## 3.1.6. Indicate the Data Structures used and Explain its purpose
 
@@ -27,11 +27,9 @@ The program uses a 2D list (`board`) to represent the chessboard. Each element i
 
 ## 3.1.7. Screenshot of the Normalized DB Table Structure used for this Game Option
 
-*Note: No database structure is provided in the given code.*
 
 ## 3.1.8. Compare the time taken & logic used for the Sequential program & the Threaded program.
 
-*Note: The provided code does not implement any threading or parallel execution.*
 
 # 3.2. Tic-Tac-Toe
 
@@ -54,7 +52,6 @@ The application validates the user's input for the username and handles the `pyg
 
 ## 3.2.5. Code Segment screenshots: unit Testing
 
-*Note: No unit tests are provided in the given code.*
 
 ## 3.2.6. Indicate the Data Structures used and purpose
 
@@ -62,7 +59,6 @@ The program uses a list (`board`) to represent the Tic-Tac-Toe board. Each eleme
 
 ## 3.2.7. Screenshot of the Normalized DB Table Structure used for this Game Option
 
-*Note: No database structure is provided in the given code.*
 
 # 3.3. Identify Shortest Path
 
@@ -93,11 +89,9 @@ The program uses a dictionary (`distances`) to store the distances between citie
 
 ## 3.3.7. Screenshot of the Normalized DB Table Structure used for this Game Option
 
-*Note: No database structure is provided in the given code.*
 
 ## 3.3.8. Compare the Shortest path identifying algorithms (logic/complexity, which scenarios are best to use it, etc.)
 
-*Note: The provided code only implements Dijkstra's algorithm for finding the shortest path.*
 
 # 3.4. Remember the Value Index
 
@@ -107,11 +101,9 @@ The program uses a dictionary (`distances`) to store the distances between citie
 
 ## 3.4.2. UI screenshots when game players provide correct answer & incorrect answers
 
-*Note: No UI screenshots for correct/incorrect answers are provided in the given code.*
 
 ## 3.4.3. Chart Containing the time Taken for each Sorting Technique
 
-*Note: No chart or timing information for sorting techniques is provided in the given code.*
 
 ## 3.4.4. Compare the sorting techniques (e.g., explain the logic used in the sorting Techniques, determine their complexity, which scenarios are best to use it, etc.).
 
@@ -146,7 +138,6 @@ The choice of sorting algorithm depends on the size and characteristics of the d
 
 ## 3.5.3. Chart Containing the time Taken for each search Technique
 
-*Note: No chart or timing information for search techniques is provided in the given code.*
 
 ## 3.5.4. Compare the search techniques (e.g., explain the logic used in the search Techniques, determine their complexity, which scenarios are best to use it, etc.).
 
