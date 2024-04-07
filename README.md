@@ -12,7 +12,7 @@ The application performs input validation to ensure that the player enters a val
 
 ## 3.1.5. Code Segment screenshots: unit Testing
 
-[Test](URL)
+[Test](https://github.com/sahanruwantha/PDSA_ASSIGNMENT/blob/main/tests/test_eight_queens_puzzle.py)
 
 ## 3.1.6. Indicate the Data Structures used and Explain its purpose
 
@@ -33,7 +33,7 @@ The application validates the user's input for the username and handles the `pyg
 
 ## 3.2.5. Code Segment screenshots: unit Testing
 
-[Test](URL)
+[Test](https://github.com/sahanruwantha/PDSA_ASSIGNMENT/blob/main/tests/test_tic_tac_toe.py)
 
 ## 3.2.6. Indicate the Data Structures used and purpose
 
@@ -56,7 +56,7 @@ The application handles the `pygame.QUIT` event to gracefully exit the applicati
 
 ## 3.3.5. Code Segment screenshots: unit Testing
 
-[Test](URL)
+[Test](https://github.com/sahanruwantha/PDSA_ASSIGNMENT/blob/main/tests/test_identify_shortest_path.py)
 
 ## 3.3.6. Indicate the Data Structures used with its purpose
 
